@@ -1,0 +1,13 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for obra in obras %}
+        <div class="obra">
+            <div class="date">
+                {{ obra.ano_publicacao }}
+            </div>
+            <h2><a href="">{{ obra.titulo }}</a></h2>
+            <p>{{ obra.isbn|linebreaksbr }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
