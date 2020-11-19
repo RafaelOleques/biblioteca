@@ -1,0 +1,36 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for obra in obras %}
+        <div class="obra">
+            <div class="date">
+                {% for genero in generos %}
+                    → {{ genero.nome }} 
+                {% endfor %}
+            </div>
+            <h2>{{ obra.titulo }}</h2>
+
+            <p><b>ISBN:<b> {{ obra.isbn|linebreaksbr }}</p>
+
+            <p><b>Autor: <b>
+                {% for autor in autores %}
+                    {{ autor.nome|linebreaksbr }} 
+                {% endfor %}
+            </p>
+
+            <p><b>Palavras Chaves:<b></p>
+            <ul>
+                {% for palavra_chave in palavras_chaves %}
+                <li>{{ palavra_chave.nome|linebreaksbr }} </li>
+                {% endfor %}
+            </ul>
+
+            <p><b>Editora: <b>
+                {% for editora in editoras %}
+                    {{ editora.nome|linebreaksbr }} 
+                {% endfor %}
+            </p>
+
+        </div>
+    {% endfor %}
+{% endblock %}

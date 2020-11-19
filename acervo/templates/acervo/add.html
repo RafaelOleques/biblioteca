@@ -3,8 +3,9 @@
 
 {% block content %}
     <h2>{{ acao }}</h2>
-    <form method="POST" class="obra-form">{% csrf_token %}
+    <form method="POST" class="">{% csrf_token %}
         {{ form|bootstrap }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
+    <br/><br/><br/>
 {% endblock %}
