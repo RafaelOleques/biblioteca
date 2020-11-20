@@ -1,0 +1,16 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for editora in editoras %}
+        <div class="editora">
+            <h2>{{ editora.titulo }}</h2>
+
+            <p><b>Nome:<b> {{ editora.nome|linebreaksbr }}</p>
+
+            <p><b>Endereço:<b> {{ editora.endereco|linebreaksbr }}</p>
+
+            <p><b>Telefone:<b> {{ editora.telefone|linebreaksbr }}</p>
+
+        </div>
+    {% endfor %}
+{% endblock %}
