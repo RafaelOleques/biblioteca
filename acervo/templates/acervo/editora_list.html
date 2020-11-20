@@ -2,8 +2,8 @@
 
 {% block content %}
     {% for editora in editoras %}
-        <div class="editora">
-            <h2><a href="{% url 'editora_detail' editora.nome %}">{{ editora.nome }}</a></h2>
+        <div class="obra">
+            <h2><a href="{% url 'editora_detail' editora.id %}">{{ editora.nome }}</a></h2>
             <p>{{ editora.telefone|linebreaksbr }}</p>
         </div>
     {% endfor %}

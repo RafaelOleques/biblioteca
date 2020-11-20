@@ -20,7 +20,7 @@ def editora_list(request):
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    atributos = ['nome', 'telefone', 'endereco']
+    atributos = ['id_editora as id', 'nome', 'telefone', 'endereco']
 
     informacoes = BD.select(tabela, atributos)
 
@@ -86,8 +86,8 @@ def editora_add(request):
 
     return render(request, 'acervo/add.html', retorno)
 
-def editora_detail(request, editora_nome):    
-    if editora_nome is None:
+def editora_detail(request, editora_id):    
+    if editora_id is None:
         return editora_list(request)
 
     usuario = "postgres"
@@ -101,7 +101,7 @@ def editora_detail(request, editora_nome):
     atributos = []
     atributos.append(['id_editora', 'telefone', 'endereco', 'nome'])
 
-    condicao = "nome = '%s'" % editora_nome
+    condicao = "id_editora = %s" % editora_id
     
     join_ = []
     join_.append('')

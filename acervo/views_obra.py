@@ -27,7 +27,7 @@ def obra_list(request):
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    atributos = ['isbn', 'titulo', 'ano_publicacao']
+    atributos = ['id_obra as id', 'isbn', 'titulo', 'ano_publicacao']
 
     informacoes = BD.select(tabela, atributos)
 
@@ -93,8 +93,8 @@ def obra_add(request):
 
     return render(request, 'acervo/add.html', retorno)
 
-def obra_detail(request, obra_titulo):    
-    if obra_titulo is None:
+def obra_detail(request, obra_id):    
+    if obra_id is None:
         return obra_list(request)
 
     usuario = "postgres"
@@ -112,7 +112,7 @@ def obra_detail(request, obra_titulo):
     atributos.append('Palavras_Chaves.nome as nome')
     atributos.append('Editora.nome as nome')
 
-    condicao = "titulo = '%s'" % obra_titulo
+    condicao = "id_obra = %s" % obra_id
     
     join_ = []
     join_.append('')
