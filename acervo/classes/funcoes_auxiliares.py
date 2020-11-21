@@ -25,12 +25,17 @@ def renomeia_atributo(atributo):
 #Verifica se há um atributo que deveria ser um número, se sim, converte para int
 def verifica_atributo_numero(atributos, valores):
     i = 0
-    for atributo in atributos:
+    valores_ = valores.split(', ')
+    atributos_ = atributos.split(', ')
+    val = []
+    for atributo in atributos_:
         if "id_" in atributo:
-            valores[i] = int(valores[i])
-        i += 1
+            val.append(int(valores_[i].replace("'", "")))
+        else:
+            val.append(valores_[i].replace("'", ""))
+        i += 1    
 
-    return valores
+    return str(val).strip('[]')
 
 
 #Formata uma lista para uma string com os elementos separados por virgula

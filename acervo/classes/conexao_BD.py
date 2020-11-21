@@ -70,6 +70,11 @@ class ConexaoBD:
 
         return select_result
 
+    def ultimo_adicionado(self, tabela, id_tabela):
+        ultimo = self._select(tabela, "MAX(%s)" % id_tabela)
+
+        return ultimo[0][0]
+
     #Retorna o nome dos atributos de uma tabela
     def atributos_nome(self, tabela):
         atributos = self._select("pg_attribute", "attname", where="attrelid = '%s'::regclass AND attnum > 0 AND NOT attisdropped;" % tabela)
@@ -85,14 +90,12 @@ class ConexaoBD:
         try:
             atributos = valida_lista(atributos)
             atributos = formata_lista_string(atributos)
-
+    
             valores = valida_lista(valores)
             valores = formata_lista_string(valores, aspas=True)
             valores = verifica_atributo_numero(atributos, valores)
-
-            operacao  = "INSERT INTO %s (%s) " % (tabela, atributos)
-            operacao += "VALUES(%s);" % (valores)
-
+            operacao  = """INSERT INTO %s (%s) 
+            VALUES(%s);""" % (tabela, atributos, valores)
             self.cursor.execute(operacao)
             self.conn.commit()
 
@@ -116,6 +119,13 @@ class ConexaoBD:
     #Recebe o nome da tabela, atualização em forma de string e a condição em forma de string
     def update(self, tabela, atualizacao, condicao):
         try:
+            atributos = valida_lista(atributos)
+            atributos = formata_lista_string(atributos)
+    
+            valores = valida_lista(valores)
+            valores = formata_lista_string(valores, aspas=True)
+            valores = verifica_atributo_numero(atributos, valores)
+            
             operacoes  = "UPDATE %s " % tabela
             operacoes += "SET %s "    % atualizacao
             operacoes += "WHERE %s"   % condicao
@@ -134,7 +144,7 @@ class ConexaoBD:
 
 if __name__ == '__main__':
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     titulo = "Lista de Livros"
@@ -167,8 +177,10 @@ if __name__ == '__main__':
     #informacoes = BD.select(tabela, atributos)
     
     #informacoes = BD.select(tabela, atributos, where=condicao)
-    BD.select("Editora", ["id_editora", "nome"], nome_atributo=False)
+    #BD.select("Editora", ["id_editora", "nome"], nome_atributo=False)
     #print(informacoes)
+
+    #print(BD.ultimo_adicionado("Obra", "id_obra"))
 
     BD.close()
 

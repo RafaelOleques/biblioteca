@@ -8,7 +8,9 @@
                     → {{ genero.nome }} 
                 {% endfor %}
             </div>
-            <h2>{{ obra.titulo }}</h2>
+            <h2>{{ obra.titulo }}</h2> 
+
+           <p><a href="{% url 'obra_edit' obra.id %}">Editar</a> | <a href="{% url 'obra_delete' obra.id %}">Excluir</a></p>
 
             <p><b>ISBN:<b> {{ obra.isbn|linebreaksbr }}</p>
 

@@ -4,7 +4,7 @@ from .classes.conexao_BD import ConexaoBD
 #Formulário padrão para uma obra
 class Add_EditoraForm(forms.Form):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
