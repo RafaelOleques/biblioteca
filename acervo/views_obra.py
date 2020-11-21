@@ -161,7 +161,6 @@ def obra_delete(request, obra_id):
     senha = "admin123"
 
     tabela = "Obra"
-    #acao = "Nova "+ tabela
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     retorno["titulo"] = "Not Found - Retorne ao Acervo"

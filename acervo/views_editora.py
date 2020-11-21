@@ -123,7 +123,6 @@ def editora_delete(request, editora_id):
     senha = "admin123"
 
     tabela = "Editora"
-    #acao = "Nova "+ tabela
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     retorno["titulo"] = "Not Found - Retorne ao Acervo"

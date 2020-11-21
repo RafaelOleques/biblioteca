@@ -123,7 +123,6 @@ def palavraChave_delete(request, palavraChave_id):
     senha = "admin123"
 
     tabela = "Palavras_Chaves"
-    #acao = "Novo "+ tabela
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     retorno["titulo"] = "Not Found - Retorne ao Acervo"

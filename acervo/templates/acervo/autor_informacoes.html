@@ -1,0 +1,26 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for autor in autores %}
+        <div class="obra">
+            <h2>{{ autor.nome }}</h2>
+            
+            <p><a href="{% url 'autor_edit' autor.id %}">Editar</a> | <a href="{% url 'autor_delete' autor.id %}">Excluir</a></p>
+            <p><b>Nome:<b> {{ autor.nome|linebreaksbr }}</p>
+
+            <p><b>Data de Nascimento:<b> {{ autor.data_nascimento|linebreaksbr }}</p>
+            <p><b>Data de Falecimento:<b> {{ autor.data_falecimento|linebreaksbr }}</p>
+            
+            <p><b>Nacionalidade:<b> {{ autor.nacionalidade|linebreaksbr }}</p>
+
+            <p><b>Biografia:<b> {{ autor.biografia|linebreaksbr }}</p>
+            
+            
+            {% comment %} <div class="date">
+                {{ autor.data_nascimento }}
+            </div> {% endcomment %}
+
+
+        </div>
+    {% endfor %}
+{% endblock %}

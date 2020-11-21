@@ -3,6 +3,7 @@ from . import views_obra
 from . import views_editora
 from . import views_genero
 from . import views_palavraChave
+from . import views_autor
 
 urlpatterns = [
     path('', views_obra.obra_list, name='obra_list'),
@@ -30,4 +31,10 @@ urlpatterns = [
     path('palavraChave/<str:palavraChave_id>/', views_palavraChave.palavraChave_detail, name='palavraChave_detail'),
     path('palavraChave/edit/<str:palavraChave_id>/', views_palavraChave.palavraChave_edit, name='palavraChave_edit'),
     path('palavraChave/delete/<str:palavraChave_id>/', views_palavraChave.palavraChave_delete, name='palavraChave_delete'),
+
+    path('autor/', views_autor.autor_list, name='autor_list'),
+    path('autor/add/', views_autor.autor_add, name='add_Autor'),
+    path('autor/<str:autor_id>/', views_autor.autor_detail, name='autor_detail'),
+    path('autor/edit/<str:autor_id>/', views_autor.autor_edit, name='autor_edit'),
+    path('autor/delete/<str:autor_id>/', views_autor.autor_delete, name='autor_delete'),
 ]
