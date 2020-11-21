@@ -122,13 +122,14 @@ def genero_delete(request, genero_id):
     usuario = "postgres"
     senha = "admin123"
 
+    tabela = "Genero"
+    #acao = "Novo "+ tabela
+
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     retorno["titulo"] = "Not Found - Retorne ao Acervo"
     retorno["linkTitulo"] = linkTitulo
-    retorno["add"] = 'add_Genero'
+    retorno["add"] = 'add_' + tabela
 
-    tabela = "Genero"
-    acao = "Novo "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     condicao = "id_genero = %s" % genero_id

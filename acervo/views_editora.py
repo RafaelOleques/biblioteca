@@ -122,13 +122,14 @@ def editora_delete(request, editora_id):
     usuario = "postgres"
     senha = "admin123"
 
+    tabela = "Editora"
+    #acao = "Nova "+ tabela
+
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     retorno["titulo"] = "Not Found - Retorne ao Acervo"
     retorno["linkTitulo"] = linkTitulo
-    retorno["add"] = 'add_Editora'
+    retorno["add"] = 'add_' + tabela
 
-    tabela = "Editora"
-    acao = "Nova "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     condicao = "id_editora = %s" % editora_id

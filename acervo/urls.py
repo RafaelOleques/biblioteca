@@ -2,6 +2,7 @@ from django.urls import path
 from . import views_obra
 from . import views_editora
 from . import views_genero
+from . import views_palavraChave
 
 urlpatterns = [
     path('', views_obra.obra_list, name='obra_list'),
@@ -23,4 +24,10 @@ urlpatterns = [
     path('genero/<str:genero_id>/', views_genero.genero_detail, name='genero_detail'),
     path('genero/edit/<str:genero_id>/', views_genero.genero_edit, name='genero_edit'),
     path('genero/delete/<str:genero_id>/', views_genero.genero_delete, name='genero_delete'),
+
+    path('palavraChave/', views_palavraChave.palavraChave_list, name='palavraChave_list'),
+    path('palavraChave/add/', views_palavraChave.palavraChave_add, name='add_Palavras_Chaves'),
+    path('palavraChave/<str:palavraChave_id>/', views_palavraChave.palavraChave_detail, name='palavraChave_detail'),
+    path('palavraChave/edit/<str:palavraChave_id>/', views_palavraChave.palavraChave_edit, name='palavraChave_edit'),
+    path('palavraChave/delete/<str:palavraChave_id>/', views_palavraChave.palavraChave_delete, name='palavraChave_delete'),
 ]

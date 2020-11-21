@@ -1,0 +1,14 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for palavraChave in Palavras_Chaves %}
+        <div class="obra">
+            <h2>{{ palavraChave.nome }}</h2>
+            
+            <p><a href="{% url 'palavraChave_edit' palavraChave.id %}">Editar</a> | <a href="{% url 'palavraChave_delete' palavraChave.id %}">Excluir</a></p>
+            
+            <p><b>Nome:<b> {{ palavraChave.nome|linebreaksbr }}</p>
+
+        </div>
+    {% endfor %}
+{% endblock %}

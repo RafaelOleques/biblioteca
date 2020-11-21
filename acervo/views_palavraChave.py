@@ -1,61 +1,54 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .classes.conexao_BD import ConexaoBD
-from .obraForms import Add_ObraForm
+from .palavraChaveForms import Add_PalavraChaveForm
 import datetime
 
-titulo_pagina = "Livros do Acervo"
-linkTitulo   = "obra_list"
+titulo_pagina = "Palavras Chaves"
+linkTitulo   = "palavraChave_list"
 
 def formata_data_BD(data):
     nova_data = data.split('/')
     return "datetime.date(%s, %s, %s)" % nova_data[0], nova_data[1], nova_data[2]
 
-def obra_redirect(request):
-    retorno = {}
-    retorno["titulo"] = "Not Found - Retorne ao Acervo"
-    retorno["linkTitulo"] = linkTitulo
-    retorno["add"] = 'add_Obra'
-    return render(request, 'acervo/obra_list.html', retorno)
-
-def obra_list(request):
+def palavraChave_list(request):
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Obra"
+    tabela = "Palavras_Chaves"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    atributos = ['id_obra as id', 'isbn', 'titulo', 'ano_publicacao']
+    atributos = ['id_palavra_chave as id', 'nome']
 
     informacoes = BD.select(tabela, atributos)
 
-    retorno["obras"] = informacoes
+    retorno["palavrasChaves"] = informacoes
     retorno["titulo"] = titulo_pagina
     retorno["linkTitulo"] = linkTitulo
     retorno["add"] = 'add_' + tabela
     BD.close()
 
-    return render(request, 'acervo/obra_list.html', retorno)
+    return render(request, 'acervo/palavraChave_list.html', retorno)
 
-def obra_add(request):
+def palavraChave_add(request):
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Obra"
-    acao = "Nova "+ tabela
+    tabela = "Palavras_Chaves"
+    acao = "Novas "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     #Verifica se é um POST para processar os dados
     if request.method == 'POST':
         #Cria uma instância de form e adiciona nele as informações do request
-        form = Add_ObraForm(request.POST, acao='adicionar', id='2')
+        form = Add_PalavraChaveForm(request.POST, acao='adicionar', id='2')
 
         if form.is_valid():
-            tabelas = ["Autor", "Genero", "Palavras_Chaves"]
-            tabelas_n = ['Autoria', 'Classificacao', 'Assunto']
+            tabelas = ["Palavras_Chaves"]
+            tabelas_n = []
             atributos = []
 
             #Pega o nome dos atributos para verificar quais vão ser adicionados
@@ -72,20 +65,17 @@ def obra_add(request):
             i = 0
             atributos_aux = []
             
-            #Dicionário para saber qual tabela está ligando a primeira com Obra
+            #Dicionário para saber qual tabela está ligando a primeira com PalavraChave
             tabela_id = {
-                "Autor"           : "Autoria",
-                "Genero"          : "Classificacao" ,
-                "Palavras_Chaves" : "Assunto",
                 }
 
-            #Informações da Obra
-            tabela = "Obra"
+            #Informações da PalavraChave
+            tabela = "Palavras_Chaves"
             atributo_ = BD.atributos_nome(tabela)
             atributos_aux.extend(atributo_)
             valores = []
 
-            #Pega as informações da Obra para add no BD
+            #Pega as informações da PalavraChave para add no BD
             for atributo in atributos_aux:
                 if atributo in form.cleaned_data:
                     if isinstance(form.cleaned_data[atributo], datetime.date):
@@ -101,52 +91,24 @@ def obra_add(request):
                 else:
                     atributo_.remove(atributo)
 
-            #ID da última obra adicionada
-            ultimo_add = BD.ultimo_adicionado("Obra", "id_obra") + 1
+            #ID da última palavraChave adicionada
+            ultimo_add = BD.ultimo_adicionado("PalavraChave", "id_palavra_chave") + 1
             
-            #Insere a nova obra no BD
+            #Insere a nova palavraChave no BD
             BD.insert(tabela, atributo_, valores)
 
             atributos_aux = []
             valores = []
 
-            #Pega os valores e atributos dos demais que fazem relação com obra
-            for tabela in tabelas:
-                atributos_aux.extend(atributos[i])
-                for atributo in atributos[i]:
-                    if atributo in form.cleaned_data:
-                        if isinstance(form.cleaned_data[atributo], datetime.date):
-                            valores.append(form.cleaned_data[atributo].strftime("%d/%m/%Y"))
-                        else:
-                            if type(form.cleaned_data[atributo]) is list:
-                                for lista in form.cleaned_data[atributo]:
-                                    valores.append(lista)
-                            else:
-                                valores.append(form.cleaned_data[atributo])
-                    else:
-                        atributos_aux.remove(atributo)
-                
-                #Adiciona no BD as relações
-                i += 1
-                for valor in valores:
-                    tabela_add = tabela_id[tabela]
-                    atributos_add = ["id_obra", atributos_aux[0]]
-                    valores_add = [ultimo_add,valor]
-
-                    BD.insert(tabela_add, atributos_add, valores_add)
-
-                atributos_aux = []
-                valores = []
-
             BD.close()
             
 
-            #Volta para a página dos livros
-            return HttpResponseRedirect('/acervo/')
+            #Volta para a página das palavrasChaves
+            return HttpResponseRedirect('/palavraChave/')
 
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
-        form = Add_ObraForm(acao='adicionar', id='2')
+        form = Add_PalavraChaveForm(acao='adicionar', id='2')
 
     retorno['form'] = form  
     retorno['titulo'] = titulo_pagina
@@ -156,12 +118,12 @@ def obra_add(request):
 
     return render(request, 'acervo/add.html', retorno)
 
-def obra_delete(request, obra_id):
+def palavraChave_delete(request, palavraChave_id):
     usuario = "postgres"
     senha = "admin123"
 
-    tabela = "Obra"
-    #acao = "Nova "+ tabela
+    tabela = "Palavras_Chaves"
+    #acao = "Novo "+ tabela
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     retorno["titulo"] = "Not Found - Retorne ao Acervo"
@@ -170,29 +132,29 @@ def obra_delete(request, obra_id):
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    condicao = "id_obra = %s" % obra_id
+    condicao = "id_palavra_chave = %s" % palavraChave_id
     
     BD.delete(tabela, condicao)
 
-    return obra_list(request)
+    return palavraChave_list(request)
 
-def obra_edit(request, obra_id):    
+def palavraChave_edit(request, palavraChave_id):    
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Obra"
-    acao = "Nova "+ tabela
+    tabela = "Palavras_Chaves"
+    acao = "Novas "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     #Verifica se é um POST para processar os dados
     if request.method == 'POST':
         #Cria uma instância de form e adiciona nele as informações do request
-        form = Add_ObraForm(request.POST, acao='editar', id=obra_id)
+        form = Add_PalavraChaveForm(request.POST, acao='editar', id=palavraChave_id)
 
         if form.is_valid():
-            tabelas = ["Autor", "Genero", "Palavras_Chaves"]
-            tabelas_n = ['Autoria', 'Classificacao', 'Assunto']
+            tabelas = ["Palavras_Chaves"]
+            tabelas_n = []
             atributos = []
 
             #Pega o nome dos atributos para verificar quais vão ser adicionados
@@ -209,20 +171,17 @@ def obra_edit(request, obra_id):
             i = 0
             atributos_aux = []
             
-            #Dicionário para saber qual tabela está ligando a primeira com Obra
+            #Dicionário para saber qual tabela está ligando a primeira com PalavraChave
             tabela_id = {
-                "Autor"           : "Autoria",
-                "Genero"          : "Classificacao" ,
-                "Palavras_Chaves" : "Assunto",
                 }
 
-            #Informações da Obra
-            tabela = "Obra"
+            #Informações da PalavraChave
+            tabela = "Palavras_Chaves"
             atributo_ = BD.atributos_nome(tabela)
             atributos_aux.extend(atributo_)
             valores = []
 
-            #Pega as informações da Obra para add no BD
+            #Pega as informações da PalavraChave para add no BD
             for atributo in atributos_aux:
                 if atributo in form.cleaned_data:
                     if isinstance(form.cleaned_data[atributo], datetime.date):
@@ -238,16 +197,16 @@ def obra_edit(request, obra_id):
                 else:
                     atributo_.remove(atributo)
 
-            #ID da última obra adicionada
-            #ultimo_add = BD.ultimo_adicionado("Obra", "id_obra") + 1
+            #ID da última palavraChave adicionada
+            #ultimo_add = BD.ultimo_adicionado("PalavraChave", "id_palavra_chave") + 1
             
-            #Insere a nova obra no BD
+            #Insere o novo palavraChave no BD
             BD.insert(tabela, atributo_, valores)
 
             atributos_aux = []
             valores = []
 
-            #Pega os valores e atributos dos demais que fazem relação com obra
+            #Pega os valores e atributos dos demais que fazem relação com palavraChave
             for tabela in tabelas:
                 atributos_aux.extend(atributos[i])
                 for atributo in atributos[i]:
@@ -267,7 +226,7 @@ def obra_edit(request, obra_id):
                 i += 1
                 for valor in valores:
                     tabela_add = tabela_id[tabela]
-                    atributos_add = ["id_obra", atributos_aux[0]]
+                    atributos_add = ["id_palavra_chave", atributos_aux[0]]
                     valores_add = [ultimo_add,valor]
 
                     #BD.insert(tabela_add, atributos_add, valores_add)
@@ -278,12 +237,12 @@ def obra_edit(request, obra_id):
             BD.close()
             
 
-            #Volta para a página dos livros
-            return HttpResponseRedirect('/acervo/')
+            #Volta para a página das palavrasChaves
+            return HttpResponseRedirect('/palavraChave/')
 
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
-        form = Add_ObraForm(acao='editar', id=obra_id)
+        form = Add_PalavraChaveForm(acao='editar', id=palavraChave_id)
 
     retorno['form'] = form  
     retorno['titulo'] = titulo_pagina
@@ -293,9 +252,9 @@ def obra_edit(request, obra_id):
 
     return render(request, 'acervo/add.html', retorno)
 
-def obra_detail(request, obra_id):    
-    if obra_id is None:
-        return obra_list(request)
+def palavraChave_detail(request, palavraChave_id):    
+    if palavraChave_id is None:
+        return palavraChave_list(request)
 
     usuario = "postgres"
     senha = "admin123"
@@ -303,25 +262,17 @@ def obra_detail(request, obra_id):
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Obra"
+    tabela = "Palavras_Chaves"
 
     atributos = []
-    atributos.append(['id_obra as id', 'isbn', 'titulo', 'ano_publicacao'])
-    atributos.append('Autor.nome as nome')
-    atributos.append('Genero.nome as nome')
-    atributos.append('Palavras_Chaves.nome as nome')
-    atributos.append('Editora.nome as nome')
+    atributos.append(['id_palavra_chave as id', 'nome'])
 
-    condicao = "id_obra = %s" % obra_id
+    condicao = "id_palavra_chave = %s" % palavraChave_id
     
     join_ = []
     join_.append('')
-    join_.append("JOIN Autoria USING(id_obra) " + "JOIN Autor USING(id_autor)")
-    join_.append("JOIN Classificacao USING(id_obra) " + "JOIN Genero USING (id_genero)")
-    join_.append("JOIN Assunto USING(id_obra)" + "JOIN Palavras_Chaves USING (id_palavra_chave)")
-    join_.append("JOIN Editora USING (id_editora)")
 
-    tabelas = ["obras", "autores", "generos", "palavras_chaves", "editoras"]
+    tabelas = ["Palavras_Chaves"]
 
     i = 0
     for nome_tabela in tabelas:
@@ -334,4 +285,4 @@ def obra_detail(request, obra_id):
     retorno["linkTitulo"] = linkTitulo
     retorno["add"] = 'add_' + tabela
 
-    return render(request, 'acervo/obra_informacoes.html', retorno)
+    return render(request, 'acervo/palavraChave_informacoes.html', retorno)
