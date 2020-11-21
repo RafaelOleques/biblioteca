@@ -1,0 +1,9 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for genero in generos %}
+        <div class="obra">
+            <h2><a href="{% url 'genero_detail' genero.id %}">{{ genero.nome }}</a></h2>
+        </div>
+    {% endfor %}
+{% endblock %}

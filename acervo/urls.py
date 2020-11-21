@@ -1,6 +1,7 @@
 from django.urls import path 
 from . import views_obra
 from . import views_editora
+from . import views_genero
 
 urlpatterns = [
     path('', views_obra.obra_list, name='obra_list'),
@@ -14,4 +15,12 @@ urlpatterns = [
     path('editora/', views_editora.editora_list, name='editora_list'),
     path('editora/add/', views_editora.editora_add, name='add_Editora'),
     path('editora/<str:editora_id>/', views_editora.editora_detail, name='editora_detail'),
+    path('editora/edit/<str:editora_id>/', views_editora.editora_edit, name='editora_edit'),
+    path('editora/delete/<str:editora_id>/', views_editora.editora_delete, name='editora_delete'),
+
+    path('genero/', views_genero.genero_list, name='genero_list'),
+    path('genero/add/', views_genero.genero_add, name='add_Genero'),
+    path('genero/<str:genero_id>/', views_genero.genero_detail, name='genero_detail'),
+    path('genero/edit/<str:genero_id>/', views_genero.genero_edit, name='genero_edit'),
+    path('genero/delete/<str:genero_id>/', views_genero.genero_delete, name='genero_delete'),
 ]

@@ -1,53 +1,53 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .classes.conexao_BD import ConexaoBD
-from .editoraForms import Add_EditoraForm
+from .generoForms import Add_GeneroForm
 import datetime
 
-titulo_pagina = "Editoras"
-linkTitulo   = "editora_list"
+titulo_pagina = "Generos"
+linkTitulo   = "genero_list"
 
 def formata_data_BD(data):
     nova_data = data.split('/')
     return "datetime.date(%s, %s, %s)" % nova_data[0], nova_data[1], nova_data[2]
 
-def editora_list(request):
+def genero_list(request):
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Editora"
+    tabela = "Genero"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    atributos = ['id_editora as id', 'nome', 'telefone', 'endereco']
+    atributos = ['id_genero as id', 'nome']
 
     informacoes = BD.select(tabela, atributos)
 
-    retorno["editoras"] = informacoes
+    retorno["generos"] = informacoes
     retorno["titulo"] = titulo_pagina
     retorno["linkTitulo"] = linkTitulo
     retorno["add"] = 'add_' + tabela
     BD.close()
 
-    return render(request, 'acervo/editora_list.html', retorno)
+    return render(request, 'acervo/genero_list.html', retorno)
 
-def editora_add(request):
+def genero_add(request):
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Editora"
-    acao = "Nova "+ tabela
+    tabela = "Genero"
+    acao = "Novo "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     #Verifica se é um POST para processar os dados
     if request.method == 'POST':
         #Cria uma instância de form e adiciona nele as informações do request
-        form = Add_EditoraForm(request.POST, acao='adicionar', id='2')
+        form = Add_GeneroForm(request.POST, acao='adicionar', id='2')
 
         if form.is_valid():
-            tabelas = ["Editora"]
+            tabelas = ["Genero"]
             tabelas_n = []
             atributos = []
 
@@ -65,17 +65,17 @@ def editora_add(request):
             i = 0
             atributos_aux = []
             
-            #Dicionário para saber qual tabela está ligando a primeira com Editora
+            #Dicionário para saber qual tabela está ligando a primeira com Genero
             tabela_id = {
                 }
 
-            #Informações da Editora
-            tabela = "Editora"
+            #Informações do Genero
+            tabela = "Genero"
             atributo_ = BD.atributos_nome(tabela)
             atributos_aux.extend(atributo_)
             valores = []
 
-            #Pega as informações da Editora para add no BD
+            #Pega as informações do Genero para add no BD
             for atributo in atributos_aux:
                 if atributo in form.cleaned_data:
                     if isinstance(form.cleaned_data[atributo], datetime.date):
@@ -91,10 +91,10 @@ def editora_add(request):
                 else:
                     atributo_.remove(atributo)
 
-            #ID da última editora adicionada
-            ultimo_add = BD.ultimo_adicionado("Editora", "id_editora") + 1
+            #ID do último genero adicionado
+            ultimo_add = BD.ultimo_adicionado("Genero", "id_genero") + 1
             
-            #Insere a nova editora no BD
+            #Insere o novo genero no BD
             BD.insert(tabela, atributo_, valores)
 
             atributos_aux = []
@@ -103,12 +103,12 @@ def editora_add(request):
             BD.close()
             
 
-            #Volta para a página dos livros
-            return HttpResponseRedirect('/editora/')
+            #Volta para a página dos generos
+            return HttpResponseRedirect('/genero/')
 
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
-        form = Add_EditoraForm(acao='adicionar', id='2')
+        form = Add_GeneroForm(acao='adicionar', id='2')
 
     retorno['form'] = form  
     retorno['titulo'] = titulo_pagina
@@ -118,41 +118,41 @@ def editora_add(request):
 
     return render(request, 'acervo/add.html', retorno)
 
-def editora_delete(request, editora_id):
+def genero_delete(request, genero_id):
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     retorno["titulo"] = "Not Found - Retorne ao Acervo"
     retorno["linkTitulo"] = linkTitulo
-    retorno["add"] = 'add_Editora'
+    retorno["add"] = 'add_Genero'
 
-    tabela = "Editora"
-    acao = "Nova "+ tabela
+    tabela = "Genero"
+    acao = "Novo "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    condicao = "id_editora = %s" % editora_id
+    condicao = "id_genero = %s" % genero_id
     
     BD.delete(tabela, condicao)
 
-    return editora_list(request)
+    return genero_list(request)
 
-def editora_edit(request, editora_id):    
+def genero_edit(request, genero_id):    
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Editora"
-    acao = "Nova "+ tabela
+    tabela = "Genero"
+    acao = "Novo "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     #Verifica se é um POST para processar os dados
     if request.method == 'POST':
         #Cria uma instância de form e adiciona nele as informações do request
-        form = Add_EditoraForm(request.POST, acao='editar', id=editora_id)
+        form = Add_GeneroForm(request.POST, acao='editar', id=genero_id)
 
         if form.is_valid():
-            tabelas = ["Editora"]
+            tabelas = ["Genero"]
             tabelas_n = []
             atributos = []
 
@@ -170,17 +170,17 @@ def editora_edit(request, editora_id):
             i = 0
             atributos_aux = []
             
-            #Dicionário para saber qual tabela está ligando a primeira com Editora
+            #Dicionário para saber qual tabela está ligando a primeira com Genero
             tabela_id = {
                 }
 
-            #Informações da Editora
-            tabela = "Editora"
+            #Informações do Genero
+            tabela = "Genero"
             atributo_ = BD.atributos_nome(tabela)
             atributos_aux.extend(atributo_)
             valores = []
 
-            #Pega as informações da Editora para add no BD
+            #Pega as informações do Genero para add no BD
             for atributo in atributos_aux:
                 if atributo in form.cleaned_data:
                     if isinstance(form.cleaned_data[atributo], datetime.date):
@@ -196,16 +196,16 @@ def editora_edit(request, editora_id):
                 else:
                     atributo_.remove(atributo)
 
-            #ID da última editora adicionada
-            #ultimo_add = BD.ultimo_adicionado("Editora", "id_editora") + 1
+            #ID do último genero adicionado
+            #ultimo_add = BD.ultimo_adicionado("Genero", "id_genero") + 1
             
-            #Insere a nova editora no BD
+            #Insere o novo genero no BD
             BD.insert(tabela, atributo_, valores)
 
             atributos_aux = []
             valores = []
 
-            #Pega os valores e atributos dos demais que fazem relação com editora
+            #Pega os valores e atributos dos demais que fazem relação com genero
             for tabela in tabelas:
                 atributos_aux.extend(atributos[i])
                 for atributo in atributos[i]:
@@ -225,7 +225,7 @@ def editora_edit(request, editora_id):
                 i += 1
                 for valor in valores:
                     tabela_add = tabela_id[tabela]
-                    atributos_add = ["id_editora", atributos_aux[0]]
+                    atributos_add = ["id_genero", atributos_aux[0]]
                     valores_add = [ultimo_add,valor]
 
                     #BD.insert(tabela_add, atributos_add, valores_add)
@@ -236,12 +236,12 @@ def editora_edit(request, editora_id):
             BD.close()
             
 
-            #Volta para a página dos livros
-            return HttpResponseRedirect('/editora/')
+            #Volta para a página dos generos
+            return HttpResponseRedirect('/genero/')
 
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
-        form = Add_EditoraForm(acao='editar', id=editora_id)
+        form = Add_GeneroForm(acao='editar', id=genero_id)
 
     retorno['form'] = form  
     retorno['titulo'] = titulo_pagina
@@ -251,9 +251,9 @@ def editora_edit(request, editora_id):
 
     return render(request, 'acervo/add.html', retorno)
 
-def editora_detail(request, editora_id):    
-    if editora_id is None:
-        return editora_list(request)
+def genero_detail(request, genero_id):    
+    if genero_id is None:
+        return genero_list(request)
 
     usuario = "postgres"
     senha = "admin123"
@@ -261,17 +261,17 @@ def editora_detail(request, editora_id):
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Editora"
+    tabela = "Genero"
 
     atributos = []
-    atributos.append(['id_editora as id', 'telefone', 'endereco', 'nome'])
+    atributos.append(['id_genero as id', 'nome'])
 
-    condicao = "id_editora = %s" % editora_id
+    condicao = "id_genero = %s" % genero_id
     
     join_ = []
     join_.append('')
 
-    tabelas = ["editoras"]
+    tabelas = ["generos"]
 
     i = 0
     for nome_tabela in tabelas:
@@ -284,4 +284,4 @@ def editora_detail(request, editora_id):
     retorno["linkTitulo"] = linkTitulo
     retorno["add"] = 'add_' + tabela
 
-    return render(request, 'acervo/editora_informacoes.html', retorno)
+    return render(request, 'acervo/genero_informacoes.html', retorno)

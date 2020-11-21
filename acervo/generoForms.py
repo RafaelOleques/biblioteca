@@ -3,39 +3,37 @@ from .classes.conexao_BD import ConexaoBD
 from .classes.funcoes_auxiliares import *
 
 #Formulário padrão para uma obra
-class Add_EditoraForm(forms.Form):
+class Add_GeneroForm(forms.Form):
     usuario = "postgres"
     senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     nome = forms.CharField(label='Nome', max_length=100)
-    telefone = forms.CharField(label='Telefone', max_length=100)
-    endereco = forms.CharField(label='Endereço', max_length=100)
 
     BD.close()
 
     def __init__(self, *args, **kwargs):
         self.acao = kwargs.pop('acao', None)
         self.id = kwargs.pop('id', None)
-        super(Add_EditoraForm, self).__init__(*args, **kwargs)
+        super(Add_GeneroForm, self).__init__(*args, **kwargs)
         
         if self.acao == "editar":
             print(self.id)
             usuario = "postgres"
             senha = "admin123"
 
-            tabela = "Editora"
+            tabela = "Genero"
 
             atributos = []
-            atributos.append(['id_editora', 'telefone', 'endereco', 'nome'])
+            atributos.append(['id_genero', 'nome'])
             
             join_ = []
             join_.append('')
 
             BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-            condicao = "id_editora = %s" % self.id
+            condicao = "id_genero = %s" % self.id
     
     def preenche_campos_texto(self, BD, tabela, atributos, condicao, join_=None):
         obra_informacoes = BD.select(tabela, atributos, where=condicao, join=join_)

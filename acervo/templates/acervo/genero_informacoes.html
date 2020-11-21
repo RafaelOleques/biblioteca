@@ -1,0 +1,14 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for genero in generos %}
+        <div class="obra">
+            <h2>{{ genero.nome }}</h2>
+            
+            <p><a href="{% url 'genero_edit' genero.id %}">Editar</a> | <a href="{% url 'genero_delete' genero.id %}">Excluir</a></p>
+            
+            <p><b>Nome:<b> {{ genero.nome|linebreaksbr }}</p>
+
+        </div>
+    {% endfor %}
+{% endblock %}

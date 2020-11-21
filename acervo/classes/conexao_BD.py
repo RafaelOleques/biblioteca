@@ -144,7 +144,7 @@ class ConexaoBD:
 
 if __name__ == '__main__':
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     titulo = "Lista de Livros"
