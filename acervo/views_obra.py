@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .classes.conexao_BD import ConexaoBD
-from .obraForms import Add_ObraForm
+from .obraForms import ObraForm
 import datetime
 
 titulo_pagina = "Livros do Acervo"
@@ -53,7 +53,7 @@ def obra_add(request):
     #Verifica se é um POST para processar os dados
     if request.method == 'POST':
         #Cria uma instância de form e adiciona nele as informações do request
-        form = Add_ObraForm(request.POST, acao='adicionar', id='2')
+        form = ObraForm(request.POST, acao='adicionar', id='2')
 
         if form.is_valid():
             tabelas = ["Autor", "Genero", "Palavras_Chaves"]
@@ -148,7 +148,7 @@ def obra_add(request):
 
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
-        form = Add_ObraForm(acao='adicionar', id='2')
+        form = ObraForm(acao='adicionar', id='2')
 
     retorno['form'] = form  
     retorno['titulo'] = titulo_pagina
@@ -190,7 +190,7 @@ def obra_edit(request, obra_id):
     #Verifica se é um POST para processar os dados
     if request.method == 'POST':
         #Cria uma instância de form e adiciona nele as informações do request
-        form = Add_ObraForm(request.POST, acao='editar', id=obra_id)
+        form = ObraForm(request.POST, acao='editar', id=obra_id)
 
         if form.is_valid():
             tabelas = ["Autor", "Genero", "Palavras_Chaves"]
@@ -290,8 +290,7 @@ def obra_edit(request, obra_id):
                 atributos_aux = []
                 atualizacoes = []
 
-                
-            
+
             BD.close()
             
             #Volta para a página dos livros
@@ -300,7 +299,7 @@ def obra_edit(request, obra_id):
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
         #return render(request, 'acervo/add.html', retorno)
-        form = Add_ObraForm(acao='editar', id=obra_id)
+        form = ObraForm(acao='editar', id=obra_id)
 
     retorno['form'] = form  
     retorno['titulo'] = titulo_pagina

@@ -2,8 +2,12 @@ from django import forms
 from .classes.conexao_BD import ConexaoBD
 from .classes.funcoes_auxiliares import *
 
+class ObraOrdenacaoForm(forms.Form):
+    ordena_lista = {"Ordem alfabética" : 0, "Por gênero" : 1, "Por palavra chave" : 2}
+    ordenacao = forms.ChoiceField(label='ordenacao', widget=forms.Select, choices=ordena_lista)
+
 #Formulário padrão para uma obra
-class Add_ObraForm(forms.Form):
+class ObraForm(forms.Form):
     usuario = "postgres"
     senha = "admin13"
 
@@ -40,7 +44,7 @@ class Add_ObraForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.acao = kwargs.pop('acao', None)
         self.id = kwargs.pop('id', None)
-        super(Add_ObraForm, self).__init__(*args, **kwargs)
+        super(ObraForm, self).__init__(*args, **kwargs)
         
         if self.acao == "editar":
             usuario = "postgres"

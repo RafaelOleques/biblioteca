@@ -17,18 +17,29 @@ class ConexaoBD:
     #Recebe o tipo de select (opcional), nome da tabela, uma lista com o nome dos atributos
     #a declaração de um join (opcional), uma condição para o where (opcional) 
     #e outras operações desejadas (opcional)
-    def _select(self, tabela, atributos, tipo_select="", join=None, where=None, group_by=None, having=None, subconsulta=None):
+    def _select(self, tabela, atributos, tipo_select="", join="", where="", group_by="", having="", order_by="", subconsulta=""):
         try:
             operacoes = ""
 
             #Verifica se há condição
-            operacoes = " " + (join if join else "") + " " + (" WHERE "+where if where else "")
+            #operacoes = " " + (join if join else "") + " " + (" WHERE "+where if where else "")
+            where = (" WHERE "+where if where else "")
+            group_by = (" GROUP BY "+group_by if group_by != "" else "")
 
             #Converte a lista em uma string com os atributos separados por virgula
             atributos = str(atributos).strip('[]').replace("'", "")
             
             #Realiza a consulta
-            self.cursor.execute("SELECT %s %s FROM %s %s;" % (tipo_select, atributos, tabela, operacoes))
+            consulta  = "SELECT {0} {1} FROM {2} ".format(atributos, tipo_select, tabela)
+            consulta += "{0} ".format(join)
+            consulta += "{0} ".format(where)
+            consulta += "{0} ".format(group_by)
+            consulta += "{0} ".format(having)
+            consulta += "{0} ".format(order_by)
+  
+
+            #self.cursor.execute("SELECT %s %s FROM %s %s;" % (tipo_select, atributos, tabela, operacoes))
+            self.cursor.execute(consulta)
             rows = self.cursor.fetchall()
 
             return rows
@@ -41,8 +52,8 @@ class ConexaoBD:
     #    -> Deve-se notar que o método não retornará o nome dos atributos no caso que se tenha
     #       um select com * e um join
     # 2. Caso contrário, retorna uma lista com as tuplas
-    def select(self, tabela, atributos, tipo_select="", join=None, where=None, group_by=None, having=None, subconsulta=None, nome_atributo=True):
-        tuplas = self._select(tabela, atributos, tipo_select, join, where)
+    def select(self, tabela, atributos, tipo_select="", join="", where="", group_by="", nome_atributo=True):
+        tuplas = self._select(tabela, atributos, tipo_select, join, where, group_by)
 
         if atributos == "*" and join is None:
             atributos = self.atributos_nome(tabela)
