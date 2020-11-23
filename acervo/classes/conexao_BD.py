@@ -119,13 +119,7 @@ class ConexaoBD:
     #Recebe o nome da tabela, atualização em forma de string e a condição em forma de string
     def update(self, tabela, atualizacao, condicao):
         try:
-            atributos = valida_lista(atributos)
-            atributos = formata_lista_string(atributos)
-    
-            valores = valida_lista(valores)
-            valores = formata_lista_string(valores, aspas=True)
-            valores = verifica_atributo_numero(atributos, valores)
-            
+                        
             operacoes  = "UPDATE %s " % tabela
             operacoes += "SET %s "    % atualizacao
             operacoes += "WHERE %s"   % condicao
@@ -144,7 +138,7 @@ class ConexaoBD:
 
 if __name__ == '__main__':
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     titulo = "Lista de Livros"

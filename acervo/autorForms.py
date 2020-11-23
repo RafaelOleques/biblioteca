@@ -5,7 +5,7 @@ from .classes.funcoes_auxiliares import *
 #Formulário padrão para um autor
 class Add_AutorForm(forms.Form):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
@@ -25,7 +25,7 @@ class Add_AutorForm(forms.Form):
         if self.acao == "editar":
             print(self.id)
             usuario = "postgres"
-            senha = "admin123"
+            senha = "admin13"
 
             tabela = "Autor"
 

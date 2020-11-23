@@ -5,7 +5,7 @@ from .classes.funcoes_auxiliares import *
 #Formulário padrão para uma obra
 class Add_ObraForm(forms.Form):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
@@ -43,9 +43,8 @@ class Add_ObraForm(forms.Form):
         super(Add_ObraForm, self).__init__(*args, **kwargs)
         
         if self.acao == "editar":
-            print(self.id)
             usuario = "postgres"
-            senha = "admin123"
+            senha = "admin13"
 
             tabela = "Obra"
 
@@ -95,9 +94,6 @@ class Add_ObraForm(forms.Form):
 
         for informacoes in obra_informacoes:
             lista_checked.append(informacoes[atributo])
-
-        print('atributo', atributo)
-        print('lista', lista_checked)
 
         self.fields[atributo].initial = lista_checked
 

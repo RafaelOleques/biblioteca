@@ -13,6 +13,7 @@
            <p><a href="{% url 'obra_edit' obra.id %}">Editar</a> | <a href="{% url 'obra_delete' obra.id %}">Excluir</a></p>
 
             <p><b>ISBN:<b> {{ obra.isbn|linebreaksbr }}</p>
+            <p><b>Data de publicação:<b> {{ obra.ano_publicacao|linebreaksbr }}</p>
 
             <p><b>Autor: <b>
                 {% for autor in autores %}

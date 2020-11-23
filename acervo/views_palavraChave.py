@@ -13,7 +13,7 @@ def formata_data_BD(data):
 
 def palavraChave_list(request):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Palavras_Chaves"
@@ -34,7 +34,7 @@ def palavraChave_list(request):
 
 def palavraChave_add(request):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Palavras_Chaves"
@@ -120,7 +120,7 @@ def palavraChave_add(request):
 
 def palavraChave_delete(request, palavraChave_id):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     tabela = "Palavras_Chaves"
 
@@ -139,7 +139,7 @@ def palavraChave_delete(request, palavraChave_id):
 
 def palavraChave_edit(request, palavraChave_id):    
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Palavras_Chaves"
@@ -256,7 +256,7 @@ def palavraChave_detail(request, palavraChave_id):
         return palavraChave_list(request)
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 

@@ -11,6 +11,7 @@ def formata_data_BD(data):
     nova_data = data.split('/')
     return "datetime.date(%s, %s, %s)" % nova_data[0], nova_data[1], nova_data[2]
 
+#Caso entre em um link inválido
 def obra_redirect(request):
     retorno = {}
     retorno["titulo"] = "Not Found - Retorne ao Acervo"
@@ -18,9 +19,10 @@ def obra_redirect(request):
     retorno["add"] = 'add_Obra'
     return render(request, 'acervo/obra_list.html', retorno)
 
+#Lista todas as obras
 def obra_list(request):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -41,11 +43,11 @@ def obra_list(request):
 
 def obra_add(request):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
-    acao = "Nova "+ tabela
+    acao = "Adição - "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     #Verifica se é um POST para processar os dados
@@ -158,7 +160,7 @@ def obra_add(request):
 
 def obra_delete(request, obra_id):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     tabela = "Obra"
 
@@ -173,15 +175,16 @@ def obra_delete(request, obra_id):
     
     BD.delete(tabela, condicao)
 
-    return obra_list(request)
+    return HttpResponseRedirect('/acervo/')
+
 
 def obra_edit(request, obra_id):    
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
-    acao = "Nova "+ tabela
+    acao = "Edição - "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     #Verifica se é um POST para processar os dados
@@ -198,7 +201,7 @@ def obra_edit(request, obra_id):
             for tabela in tabelas:
                 atributos.append(BD.atributos_nome(tabela))
 
-            valores = []
+            atualizacoes = []
             
 
             #Salva os atributos em uma variável auxiliar para que possa excluir dentro do for 
@@ -209,79 +212,94 @@ def obra_edit(request, obra_id):
             atributos_aux = []
             
             #Dicionário para saber qual tabela está ligando a primeira com Obra
-            tabela_id = {
+            tabela_relacoes = {
                 "Autor"           : "Autoria",
                 "Genero"          : "Classificacao" ,
                 "Palavras_Chaves" : "Assunto",
                 }
+            
+            #Dicionário para saber qual é o id de cada tabela
+            id_obra = "id_obra"
 
             #Informações da Obra
             tabela = "Obra"
             atributo_ = BD.atributos_nome(tabela)
             atributos_aux.extend(atributo_)
-            valores = []
+            atualizacoes = []
 
             #Pega as informações da Obra para add no BD
             for atributo in atributos_aux:
                 if atributo in form.cleaned_data:
                     if isinstance(form.cleaned_data[atributo], datetime.date):
-                        valores.append(form.cleaned_data[atributo].strftime("%d/%m/%Y"))
+                        formata_update = "{0} = '{1}'".format(atributo, form.cleaned_data[atributo].strftime("%d/%m/%Y"))
+                        atualizacoes.append(formata_update)
                     elif "id_" in atributo:
-                        valores.append(form.cleaned_data[atributo])
+                        formata_update = "{0} = {1}".format(atributo, form.cleaned_data[atributo])
+                        atualizacoes.append(formata_update)
                     else:
                         if type(form.cleaned_data[atributo]) is list:
                             for lista in form.cleaned_data[atributo]:
-                                valores.append(lista)
+                                formata_update = "{0} = '{1}'".format(atributo, lista)
+                                atualizacoes.append(formata_update)
                         else:
-                            valores.append(form.cleaned_data[atributo])
+                            formata_update = "{0} = '{1}'".format(atributo, form.cleaned_data[atributo])
+                            atualizacoes.append(formata_update)
                 else:
                     atributo_.remove(atributo)
 
-            #ID da última obra adicionada
-            #ultimo_add = BD.ultimo_adicionado("Obra", "id_obra") + 1
-            
-            #Insere a nova obra no BD
-            BD.insert(tabela, atributo_, valores)
+            atualizacoes = ', '.join(atualizacoes)
+            condicao = "{0} = {1}".format(id_obra, obra_id)
+
+            #Atualiza a obra
+            BD.update(tabela, atualizacoes, condicao)
+
 
             atributos_aux = []
-            valores = []
+            atualizacoes = []
 
             #Pega os valores e atributos dos demais que fazem relação com obra
             for tabela in tabelas:
                 atributos_aux.extend(atributos[i])
                 for atributo in atributos[i]:
                     if atributo in form.cleaned_data:
-                        if isinstance(form.cleaned_data[atributo], datetime.date):
-                            valores.append(form.cleaned_data[atributo].strftime("%d/%m/%Y"))
+                        if type(form.cleaned_data[atributo]) is list:
+                            for lista in form.cleaned_data[atributo]:
+                                atualizacoes.append(lista)
                         else:
-                            if type(form.cleaned_data[atributo]) is list:
-                                for lista in form.cleaned_data[atributo]:
-                                    valores.append(lista)
-                            else:
-                                valores.append(form.cleaned_data[atributo])
+                            atualizacoes.append(form.cleaned_data[atributo])
                     else:
                         atributos_aux.remove(atributo)
                 
-                #Adiciona no BD as relações
+                #Deleta as relações que já haviam
                 i += 1
-                for valor in valores:
-                    tabela_add = tabela_id[tabela]
-                    atributos_add = ["id_obra", atributos_aux[0]]
-                    valores_add = [ultimo_add,valor]
+                for valor in atualizacoes:
+                    tabela_atualiza = tabela_relacoes[tabela]
 
-                    #BD.insert(tabela_add, atributos_add, valores_add)
+                    condicao = "{0} = {1}".format(id_obra, obra_id)
+                    BD.delete(tabela_atualiza, condicao)
+
+                #Adiciona as novas relações
+                for valor in atualizacoes:
+                    tabela_atualiza = tabela_relacoes[tabela]
+
+                    atributos_add = [id_obra, atributos_aux[0]]
+                    valores_add = [obra_id, valor]
+                    BD.insert(tabela_atualiza, atributos_add, valores_add)
+                    
 
                 atributos_aux = []
-                valores = []
+                atualizacoes = []
 
+                
+            
             BD.close()
             
-
             #Volta para a página dos livros
-            return HttpResponseRedirect('/acervo/')
+            return HttpResponseRedirect('/acervo/obra/{0}'.format(obra_id))
 
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
+        #return render(request, 'acervo/add.html', retorno)
         form = Add_ObraForm(acao='editar', id=obra_id)
 
     retorno['form'] = form  
@@ -292,18 +310,21 @@ def obra_edit(request, obra_id):
 
     return render(request, 'acervo/add.html', retorno)
 
+#Informações de uma obra específica
 def obra_detail(request, obra_id):    
     if obra_id is None:
         return obra_list(request)
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
 
+    #Atributos para cada um dos select
+    #Cada posição da lista corresponde a um select
     atributos = []
     atributos.append(['id_obra as id', 'isbn', 'titulo', 'ano_publicacao'])
     atributos.append('Autor.nome as nome')
@@ -313,6 +334,9 @@ def obra_detail(request, obra_id):
 
     condicao = "id_obra = %s" % obra_id
     
+    #Joins para os select
+    #Cada posição da lista corresponde a um select, sendo utilizado com o correspondente
+    #da lista "atributos" que foi isntanciada acima
     join_ = []
     join_.append('')
     join_.append("JOIN Autoria USING(id_obra) " + "JOIN Autor USING(id_autor)")
@@ -320,9 +344,12 @@ def obra_detail(request, obra_id):
     join_.append("JOIN Assunto USING(id_obra)" + "JOIN Palavras_Chaves USING (id_palavra_chave)")
     join_.append("JOIN Editora USING (id_editora)")
 
+    #Nome das tabelas que será retornado para a página
     tabelas = ["obras", "autores", "generos", "palavras_chaves", "editoras"]
 
     i = 0
+    #Realização das consultas, salvando o resultado em um dicionário com o indice como
+    #o nome da tabela, a qual faz referência
     for nome_tabela in tabelas:
         retorno[nome_tabela] =  BD.select(tabela, atributos[i], where=condicao, join=join_[i])
         i += 1

@@ -13,7 +13,7 @@ def formata_data_BD(data):
 
 def genero_list(request):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Genero"
@@ -34,7 +34,7 @@ def genero_list(request):
 
 def genero_add(request):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Genero"
@@ -120,7 +120,7 @@ def genero_add(request):
 
 def genero_delete(request, genero_id):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     tabela = "Genero"
 
@@ -139,7 +139,7 @@ def genero_delete(request, genero_id):
 
 def genero_edit(request, genero_id):    
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Genero"
@@ -256,7 +256,7 @@ def genero_detail(request, genero_id):
         return genero_list(request)
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "admin13"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
