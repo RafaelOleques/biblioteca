@@ -22,7 +22,7 @@ def obra_redirect(request):
 #Lista todas as obras
 def obra_list(request):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -43,7 +43,7 @@ def obra_list(request):
 
 def obra_add(request):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -160,7 +160,7 @@ def obra_add(request):
 
 def obra_delete(request, obra_id):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     tabela = "Obra"
 
@@ -180,7 +180,7 @@ def obra_delete(request, obra_id):
 
 def obra_edit(request, obra_id):    
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -316,7 +316,7 @@ def obra_detail(request, obra_id):
         return obra_list(request)
 
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 

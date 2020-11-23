@@ -3,11 +3,15 @@
 {% block content %}
     {% for genero in generos %}
         <div class="obra">
-            <h2>{{ genero.nome }}</h2>
+            <h2>Obras do gênero {{ genero.nome }}</h2>
             
             <p><a href="{% url 'genero_edit' genero.id %}">Editar</a> | <a href="{% url 'genero_delete' genero.id %}">Excluir</a></p>
             
-            <p><b>Nome:<b> {{ genero.nome|linebreaksbr }}</p>
+            <p><b>Livros: <b>
+                {% for obra in obras %}
+                    <li><a href="{% url 'obra_detail' obra.id %}">{{ obra.titulo|linebreaksbr }}</a></li>
+                {% endfor %}
+            </p>
 
         </div>
     {% endfor %}

@@ -13,7 +13,7 @@ def formata_data_BD(data):
 
 def genero_list(request):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Genero"
@@ -34,7 +34,7 @@ def genero_list(request):
 
 def genero_add(request):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Genero"
@@ -120,7 +120,7 @@ def genero_add(request):
 
 def genero_delete(request, genero_id):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     tabela = "Genero"
 
@@ -139,7 +139,7 @@ def genero_delete(request, genero_id):
 
 def genero_edit(request, genero_id):    
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Genero"
@@ -256,7 +256,7 @@ def genero_detail(request, genero_id):
         return genero_list(request)
 
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
@@ -265,13 +265,15 @@ def genero_detail(request, genero_id):
 
     atributos = []
     atributos.append(['id_genero as id', 'nome'])
+    atributos.append(['id_obra as id','Obra.titulo as titulo'])
 
     condicao = "id_genero = %s" % genero_id
     
     join_ = []
     join_.append('')
-
-    tabelas = ["generos"]
+    join_.append("JOIN Classificacao USING(id_genero) " + "JOIN Obra USING(id_obra)")
+    
+    tabelas = ["generos", "obras"]    
 
     i = 0
     for nome_tabela in tabelas:
