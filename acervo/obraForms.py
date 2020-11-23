@@ -9,7 +9,7 @@ class ObraOrdenacaoForm(forms.Form):
 #Formulário padrão para uma obra
 class ObraForm(forms.Form):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
@@ -48,7 +48,7 @@ class ObraForm(forms.Form):
         
         if self.acao == "editar":
             usuario = "postgres"
-            senha = "admin13"
+            senha = "admin123"
 
             tabela = "Obra"
 

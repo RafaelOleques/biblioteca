@@ -13,7 +13,7 @@ def formata_data_BD(data):
 
 def autor_list(request):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Autor"
@@ -34,7 +34,7 @@ def autor_list(request):
 
 def autor_add(request):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Autor"
@@ -120,7 +120,7 @@ def autor_add(request):
 
 def autor_delete(request, autor_id):
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     tabela = "Autor"
 
@@ -139,7 +139,7 @@ def autor_delete(request, autor_id):
 
 def autor_edit(request, autor_id):    
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Autor"
@@ -256,7 +256,7 @@ def autor_detail(request, autor_id):
         return autor_list(request)
 
     usuario = "postgres"
-    senha = "admin13"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
