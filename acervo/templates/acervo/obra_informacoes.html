@@ -10,7 +10,9 @@
             </div>
             <h2>{{ obra.titulo }}</h2> 
 
-           <p><a href="{% url 'obra_edit' obra.id %}">Editar</a> | <a href="{% url 'obra_delete' obra.id %}">Excluir</a></p>
+           <p><a href="{% url 'obra_edit' obra.id %}">Editar</a> 
+            | <a href="{% url 'obra_delete' obra.id %}">Excluir</a></p>
+            <p><a href="{% url 'exemplar_add' obra.id %}">Adicionar exemplar</a></p>   
 
             <p><b>ISBN:<b> {{ obra.isbn|linebreaksbr }}</p>
             <p><b>Data de publicação:<b> {{ obra.ano_publicacao|linebreaksbr }}</p>
@@ -33,6 +35,17 @@
                     {{ editora.nome|linebreaksbr }} 
                 {% endfor %}
             </p>
+
+            {% if exemplares %}
+                <hr/>
+
+                <p><b>Exemplares: <b></b></p>
+                <ul>
+                    {% for exemplar in exemplares %}
+                        <li>Edição: {{ exemplar.edicao }} | Local: {{ exemplar.sub_biblioteca }} | Status: Reservado</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
         </div>
     {% endfor %}

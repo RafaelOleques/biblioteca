@@ -157,33 +157,13 @@ if __name__ == '__main__':
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    atributos = ['isbn', 'titulo', 'ano_publicacao', 'id_editora']
-    #atributos = ['isbn as obra_isbn', 'titulo as obra_titulo', 'ano_publicacao', 'Autor.nome as autor_name', 'Genero.nome as genero_nome', 'Palavras_Chaves.nome as palavra_chave_nome', 'Editora.nome as editora_nome' ]
-
-    condicao = "titulo = 'Linguagens Formais e Automatos'"
-    
-    join_ =   "JOIN Editora USING (id_editora)"
-    join_ +=  "JOIN Autoria USING(id_obra)"
-    join_ +=  "JOIN Autor USING(id_autor)"
-    join_ +=  "JOIN Classificacao USING(id_obra)"
-    join_ +=  "JOIN Genero USING (id_genero)"
-    join_ += "JOIN Assunto USING(id_obra)"
-    join_ += "JOIN Palavras_Chaves USING (id_palavra_chave)"
-
-    #BD.insert("Genero", "nome", "mamiferos")
-    #BD.insert("Classificacao", ['id_obra', 'id_genero'], [2, 4])
+    atributos = ['titulo', 'edicao', 'sequencia']
 
     tabela = 'Obra'
-    condicao = "titulo = 'Habitos dos mamiferos aquaticos'"
-    join_ = "JOIN Assunto USING(id_obra)" + "JOIN Palavras_Chaves USING (id_palavra_chave)"
+    join_ = "JOIN Exemplar USING(id_obra)"
 
-    valores = ['88888', 'Fantasma da Opera', '15/10/2015', 2]
-    #BD.insert(tabela, atributos,valores)
-    #informacoes = BD.select(tabela, atributos)
-    
-    #informacoes = BD.select(tabela, atributos, where=condicao)
-    #BD.select("Editora", ["id_editora", "nome"], nome_atributo=False)
-    #print(informacoes)
+    informacoes = BD.select("Editora", ["id_editora", "nome"], nome_atributo=True)
+    print(informacoes)
 
     #print(BD.ultimo_adicionado("Obra", "id_obra"))
 

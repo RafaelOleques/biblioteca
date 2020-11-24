@@ -2,46 +2,27 @@ from django import forms
 from .classes.conexao_BD import ConexaoBD
 from .classes.funcoes_auxiliares import *
 
+
 #Formulário padrão para uma obra
-class ObraForm(forms.Form):
+class ExemplarForm(forms.Form):
     usuario = "postgres"
     senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    titulo = forms.CharField(label='Título', max_length=100)
-    isbn = forms.CharField(label='ISBN', max_length=100)
-    ano_publicacao = forms.DateField(label="Ano de publicação")
+    #numérico
+    edicao = forms.CharField(label='Título', max_length=100)
     
-    autor = BD.select("Autor", ["id_autor", "nome"], nome_atributo=False)
-    id_autor = forms.ChoiceField(label='Autor', widget=forms.Select, choices=autor)
-
-    editoras = BD.select("Editora", ["id_editora", "nome"], nome_atributo=False)
-    id_editora = forms.ChoiceField(label='Editora', widget=forms.Select, choices=editoras)
-
-    generos = BD.select("Genero", ["id_genero", "nome"], nome_atributo=False)
-    id_genero = forms.MultipleChoiceField(
-        required=True,
-        widget=forms.CheckboxSelectMultiple,
-        choices=generos,
-        label="Gênero",
-    )
-
-    palavra_chave = BD.select("Palavras_chaves", ["id_palavra_chave", "nome"], nome_atributo=False)
-    id_palavra_chave = forms.MultipleChoiceField(
-        required=True,
-        widget=forms.CheckboxSelectMultiple,
-        choices=palavra_chave,
-        label="Palavras Chaves",
-    )
+    subBiblitecas = BD.select("Sub_Biblioteca", ["id_subBiblioteca", "nome"], nome_atributo=False)
+    id_subBiblioteca = forms.ChoiceField(label='Sub-Biblioteca', widget=forms.Select, choices=subBiblitecas)
 
     BD.close()
 
     def __init__(self, *args, **kwargs):
         self.acao = kwargs.pop('acao', None)
         self.id = kwargs.pop('id', None)
-        super(ObraForm, self).__init__(*args, **kwargs)
-        
+        super(ExemplarForm, self).__init__(*args, **kwargs)
+        '''
         if self.acao == "editar":
             usuario = "postgres"
             senha = "admin123"
@@ -77,7 +58,9 @@ class ObraForm(forms.Form):
             self.preenche_campos_checkbox(BD, tabela, atributos[GENERO], condicao, join_[GENERO])
             self.preenche_campos_checkbox(BD, tabela, atributos[PALAVRA_CHAVE], condicao, join_[PALAVRA_CHAVE])
             self.preenche_campos_select(BD, tabela, atributos[EDITORA], condicao, join_[EDITORA])
-    
+
+        '''
+    '''
     def preenche_campos_texto(self, BD, tabela, atributos, condicao, join_=None):
         obra_informacoes = BD.select(tabela, atributos, where=condicao, join=join_)
         obra_informacoes = obra_informacoes[0]
@@ -102,3 +85,5 @@ class ObraForm(forms.Form):
         obra_informacoes= obra_informacoes[0]
 
         self.fields[atributo].initial = obra_informacoes[atributo]
+
+    '''
