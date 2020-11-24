@@ -3,7 +3,7 @@ from .classes.conexao_BD import ConexaoBD
 from .classes.funcoes_auxiliares import *
 
 #Formulário padrão para um genero
-class Add_GeneroForm(forms.Form):
+class GeneroForm(forms.Form):
     usuario = "postgres"
     senha = "admin123"
 
@@ -16,17 +16,16 @@ class Add_GeneroForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.acao = kwargs.pop('acao', None)
         self.id = kwargs.pop('id', None)
-        super(Add_GeneroForm, self).__init__(*args, **kwargs)
+        super(GeneroForm, self).__init__(*args, **kwargs)
         
         if self.acao == "editar":
-            print(self.id)
             usuario = "postgres"
             senha = "admin123"
 
             tabela = "Genero"
 
             atributos = []
-            atributos.append(['id_genero', 'nome'])
+            atributos.append(['nome'])
             
             join_ = []
             join_.append('')
@@ -34,6 +33,10 @@ class Add_GeneroForm(forms.Form):
             BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
             condicao = "id_genero = %s" % self.id
+
+            GENERO          = 0
+
+            self.preenche_campos_texto(BD, tabela, atributos[GENERO], condicao, join_[GENERO])
     
     def preenche_campos_texto(self, BD, tabela, atributos, condicao, join_=None):
         genero_informacoes = BD.select(tabela, atributos, where=condicao, join=join_)
@@ -43,22 +46,3 @@ class Add_GeneroForm(forms.Form):
 
         for atributo in atributos:
             self.fields[atributo].widget.attrs['value'] = genero_informacoes[atributo]
-    
-    def preenche_campos_checkbox(self, BD, tabela, atributo, condicao, join_=None):
-        genero_informacoes = BD.select(tabela, atributo, where=condicao, join=join_)
-
-        lista_checked = []
-
-        for informacoes in genero_informacoes:
-            lista_checked.append(informacoes[atributo])
-
-        print('atributo', atributo)
-        print('lista', lista_checked)
-
-        self.fields[atributo].initial = lista_checked
-
-    def preenche_campos_select(self, BD, tabela, atributo, condicao, join_=None):
-        genero_informacoes = BD.select(tabela, atributo, where=condicao, join=join_)
-        genero_informacoes= genero_informacoes[0]
-
-        self.fields[atributo].initial = genero_informacoes[atributo]

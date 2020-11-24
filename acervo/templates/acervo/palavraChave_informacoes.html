@@ -7,7 +7,11 @@
             
             <p><a href="{% url 'palavraChave_edit' palavraChave.id %}">Editar</a> | <a href="{% url 'palavraChave_delete' palavraChave.id %}">Excluir</a></p>
             
-            <p><b>Nome:<b> {{ palavraChave.nome|linebreaksbr }}</p>
+            <p><b>Livros: <b>
+                {% for obra in obras %}
+                    <li><a href="{% url 'obra_detail' obra.id %}">{{ obra.titulo|linebreaksbr }}</a></li>
+                {% endfor %}
+            </p>
 
         </div>
     {% endfor %}
