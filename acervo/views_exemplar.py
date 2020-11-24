@@ -306,16 +306,16 @@ def exemplar_detail(request, exemplar_id):
     tabela = "Exemplar"
 
     atributos = []
-    atributos.append(['sequencia as id', 'nome'])
-    atributos.append(['id_obra as id','Obra.titulo as titulo'])
+    atributos.append(['sequencia as id', 'edicao'])
+    #atributos.append(['id_obra as id','Obra.titulo as titulo'])
 
     condicao = "sequencia = %s" % exemplar_id
     
     join_ = []
     join_.append('')
-    join_.append("JOIN Classificacao USING(sequencia) " + "JOIN Obra USING(id_obra)")
+    #join_.append("JOIN Exemplar USING(sequencia) " + "JOIN Obra USING(id_obra)")
     
-    tabelas = ["exemplares", "obras"]    
+    tabelas = ["exemplares"]    
 
     i = 0
     for nome_tabela in tabelas:

@@ -41,8 +41,10 @@ urlpatterns = [
     path('autor/delete/<str:autor_id>/', views_autor.autor_delete, name='autor_delete'),
 
     path('exemplar/', views_exemplar.exemplar_list, name='exemplar_list'),
+    #path('exemplar/<str:obra_id>', views_exemplar.exemplar_list, name='exemplar_list'),
     path('exemplar/add/', views_exemplar.exemplar_add, name='add_Exemplar'),
     path('exemplar/<str:exemplar_id>/', views_exemplar.exemplar_detail, name='exemplar_detail'),
+    path('exemplar/<str:obra_id>/', views_exemplar.exemplar_detail, name='exemplar_detail'),
     path('exemplar/edit/<str:exemplar_id>/', views_exemplar.exemplar_edit, name='exemplar_edit'),
     path('exemplar/delete/<str:exemplar_id>/', views_exemplar.exemplar_delete, name='exemplar_delete'),
 

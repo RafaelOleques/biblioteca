@@ -47,27 +47,10 @@ def subBiblioteca_add(request):
         form = SubBibliotecaForm(request.POST, acao='adicionar', id='2')
 
         if form.is_valid():
-            tabelas = []
-            tabelas_n = []
-            atributos = []
-
-            #Pega o nome dos atributos para verificar quais vão ser adicionados
-            for tabela in tabelas:
-                atributos.append(BD.atributos_nome(tabela))
-
-            valores = []
-            
-
-            #Salva os atributos em uma variável auxiliar para que possa excluir dentro do for 
-            #os que não vão ser utilizados
-
+           
             #Identifica os valores dos atributos que foram recebidos
             i = 0
             atributos_aux = []
-            
-            #Dicionário para saber qual tabela está ligando a primeira com SubBiblioteca
-            tabela_id = {
-                }
 
             #Informações da SubBiblioteca
             tabela = "Sub_Biblioteca"
@@ -96,37 +79,6 @@ def subBiblioteca_add(request):
             
             #Insere a nova SubBiblioteca no BD
             BD.insert(tabela, atributo_, valores)
-
-            atributos_aux = []
-            valores = []
-
-            #Pega os valores e atributos dos demais que fazem relação com SubBiblioteca
-            for tabela in tabelas:
-                atributos_aux.extend(atributos[i])
-                for atributo in atributos[i]:
-                    if atributo in form.cleaned_data:
-                        if isinstance(form.cleaned_data[atributo], datetime.date):
-                            valores.append(form.cleaned_data[atributo].strftime("%d/%m/%Y"))
-                        else:
-                            if type(form.cleaned_data[atributo]) is list:
-                                for lista in form.cleaned_data[atributo]:
-                                    valores.append(lista)
-                            else:
-                                valores.append(form.cleaned_data[atributo])
-                    else:
-                        atributos_aux.remove(atributo)
-                
-                #Adiciona no BD as relações
-                i += 1
-                for valor in valores:
-                    tabela_add = tabela_id[tabela]
-                    atributos_add = ["id_subBiblioteca", atributos_aux[0]]
-                    valores_add = [ultimo_add,valor]
-
-                    BD.insert(tabela_add, atributos_add, valores_add)
-
-                atributos_aux = []
-                valores = []
 
             BD.close()
             
@@ -307,13 +259,14 @@ def subBiblioteca_detail(request, subBiblioteca_id):
 
     atributos = []
     atributos.append(['id_subBiblioteca as id', 'nome'])
+    #atributos.append(['sequencia as id','Obra.titulo as titulo'])
     atributos.append(['id_obra as id','Obra.titulo as titulo'])
 
     condicao = "id_subBiblioteca = %s" % subBiblioteca_id
     
     join_ = []
     join_.append('')
-    join_.append("JOIN Assunto USING(id_subBiblioteca) " + "JOIN Obra USING(id_obra)")
+    join_.append("JOIN Exemplar USING(id_subBiblioteca) " + "JOIN Obra USING(id_obra)")
 
     tabelas = ["Sub_Biblioteca","obras"]
 

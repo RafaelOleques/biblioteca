@@ -47,27 +47,10 @@ def palavraChave_add(request):
         form = PalavraChaveForm(request.POST, acao='adicionar', id='2')
 
         if form.is_valid():
-            tabelas = []
-            tabelas_n = []
-            atributos = []
-
-            #Pega o nome dos atributos para verificar quais vão ser adicionados
-            for tabela in tabelas:
-                atributos.append(BD.atributos_nome(tabela))
-
-            valores = []
             
-
-            #Salva os atributos em uma variável auxiliar para que possa excluir dentro do for 
-            #os que não vão ser utilizados
-
             #Identifica os valores dos atributos que foram recebidos
             i = 0
             atributos_aux = []
-            
-            #Dicionário para saber qual tabela está ligando a primeira com PalavraChave
-            tabela_id = {
-                }
 
             #Informações da PalavraChave
             tabela = "Palavras_Chaves"
@@ -96,37 +79,6 @@ def palavraChave_add(request):
             
             #Insere a nova palavraChave no BD
             BD.insert(tabela, atributo_, valores)
-
-            atributos_aux = []
-            valores = []
-
-            #Pega os valores e atributos dos demais que fazem relação com palavraChave
-            for tabela in tabelas:
-                atributos_aux.extend(atributos[i])
-                for atributo in atributos[i]:
-                    if atributo in form.cleaned_data:
-                        if isinstance(form.cleaned_data[atributo], datetime.date):
-                            valores.append(form.cleaned_data[atributo].strftime("%d/%m/%Y"))
-                        else:
-                            if type(form.cleaned_data[atributo]) is list:
-                                for lista in form.cleaned_data[atributo]:
-                                    valores.append(lista)
-                            else:
-                                valores.append(form.cleaned_data[atributo])
-                    else:
-                        atributos_aux.remove(atributo)
-                
-                #Adiciona no BD as relações
-                i += 1
-                for valor in valores:
-                    tabela_add = tabela_id[tabela]
-                    atributos_add = ["id_palavra_chave", atributos_aux[0]]
-                    valores_add = [ultimo_add,valor]
-
-                    BD.insert(tabela_add, atributos_add, valores_add)
-
-                atributos_aux = []
-                valores = []
 
             BD.close()
             
