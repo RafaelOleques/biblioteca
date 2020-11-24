@@ -4,6 +4,8 @@ from . import views_editora
 from . import views_genero
 from . import views_palavraChave
 from . import views_autor
+from . import views_subBiblioteca
+from . import views_exemplar
 
 urlpatterns = [
     path('', views_obra.obra_list, name='obra_list'),
@@ -37,4 +39,16 @@ urlpatterns = [
     path('autor/<str:autor_id>/', views_autor.autor_detail, name='autor_detail'),
     path('autor/edit/<str:autor_id>/', views_autor.autor_edit, name='autor_edit'),
     path('autor/delete/<str:autor_id>/', views_autor.autor_delete, name='autor_delete'),
+
+    path('exemplar/', views_exemplar.exemplar_list, name='exemplar_list'),
+    path('exemplar/add/', views_exemplar.exemplar_add, name='add_Exemplar'),
+    path('exemplar/<str:exemplar_id>/', views_exemplar.exemplar_detail, name='exemplar_detail'),
+    path('exemplar/edit/<str:exemplar_id>/', views_exemplar.exemplar_edit, name='exemplar_edit'),
+    path('exemplar/delete/<str:exemplar_id>/', views_exemplar.exemplar_delete, name='exemplar_delete'),
+
+    path('subBiblioteca/', views_subBiblioteca.subBiblioteca_list, name='subBiblioteca_list'),
+    path('subBiblioteca/add/', views_subBiblioteca.subBiblioteca_add, name='add_Sub_Biblioteca'),
+    path('subBiblioteca/<str:subBiblioteca_id>/', views_subBiblioteca.subBiblioteca_detail, name='subBiblioteca_detail'),
+    path('subBiblioteca/edit/<str:subBiblioteca_id>/', views_subBiblioteca.subBiblioteca_edit, name='subBiblioteca_edit'),
+    path('subBiblioteca/delete/<str:subBiblioteca_id>/', views_subBiblioteca.subBiblioteca_delete, name='subBiblioteca_delete'),
 ]

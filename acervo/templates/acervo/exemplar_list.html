@@ -1,0 +1,9 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for exemplar in exemplares %}
+        <div class="obra">
+            <h2><a href="{% url 'exemplar_detail' exemplar.id %}">{{ exemplar.edicao }}</a></h2>
+        </div>
+    {% endfor %}
+{% endblock %}

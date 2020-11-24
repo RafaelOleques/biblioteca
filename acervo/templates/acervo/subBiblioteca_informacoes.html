@@ -1,0 +1,18 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for subBiblioteca in Sub_Biblioteca %}
+        <div class="obra">
+            <h2>{{ palavraChave.nome }}</h2>
+            
+            <p><a href="{% url 'subBiblioteca_edit' subBiblioteca.id %}">Editar</a> | <a href="{% url 'subBiblioteca_delete' subBiblioteca.id %}">Excluir</a></p>
+            
+            <p><b>Livros: <b>
+                {% for obra in obras %}
+                    <li><a href="{% url 'obra_detail' obra.id %}">{{ obra.titulo|linebreaksbr }}</a></li>
+                {% endfor %}
+            </p>
+
+        </div>
+    {% endfor %}
+{% endblock %}
