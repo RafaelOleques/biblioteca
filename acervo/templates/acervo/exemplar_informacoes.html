@@ -1,0 +1,22 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for exemplar in exemplares %}
+        <div class="obra">
+            {% comment %} <p><a href="{% url 'exemplar_edit' exemplar.id %}">Editar</a> | <a href="{% url 'exemplar_delete' exemplar.id %}">Excluir</a></p> {% endcomment %}
+            {% for obra in obras %}
+                <h2>Titulo: {{ obra.titulo }}</h2>
+                <h2>Edição: {{ exemplar.edicao }}</h2>
+                {% comment %} <h2>Edição: <a href="{% url 'exemplar_detail' exemplar.id obra.id %}">{{ exemplar.edicao }}</a></h2> {% endcomment %}
+                <h2>Sequencia: {{ exemplar.id }}</h2>
+            {% endfor %}
+            
+            {% comment %} {% if exemplar.data_falecimento != None %}
+                <p><b>Data de Falecimento:<b> {{ exemplar.data_falecimento|linebreaksbr }}</p>
+            {% endif %}  {% endcomment %}
+
+        </div>
+    {% endfor %}
+{% endblock %}
+
+

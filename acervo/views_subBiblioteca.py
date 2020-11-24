@@ -1,81 +1,64 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .classes.conexao_BD import ConexaoBD
-from .autorForms import AutorForm
+from .subBibliotecaForms import SubBibliotecaForm
 import datetime
 
-titulo_pagina = "Autores"
-linkTitulo   = "autor_list"
+titulo_pagina = "Sub-Bibliotecas"
+linkTitulo   = "subBiblioteca_list"
 
 def formata_data_BD(data):
     nova_data = data.split('/')
     return "datetime.date(%s, %s, %s)" % nova_data[0], nova_data[1], nova_data[2]
 
-def autor_list(request):
+def subBiblioteca_list(request):
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Autor"
+    tabela = "Sub_Biblioteca"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    atributos = ['id_autor as id', 'nome', 'data_nascimento', 'data_falecimento', 'nacionalidade', 'biografia']
+    atributos = ['id_subBiblioteca as id', 'nome']
 
     informacoes = BD.select(tabela, atributos)
 
-    retorno["autores"] = informacoes
+    retorno["subBiblioteca"] = informacoes
     retorno["titulo"] = titulo_pagina
     retorno["linkTitulo"] = linkTitulo
     retorno["add"] = 'add_' + tabela
     BD.close()
 
-    return render(request, 'acervo/autor_list.html', retorno)
+    return render(request, 'acervo/subBiblioteca_list.html', retorno)
 
-def autor_add(request):
+def subBiblioteca_add(request):
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Autor"
-    acao = "Novo "+ tabela
+    tabela = "Sub_Biblioteca"
+    acao = "Novas "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     #Verifica se é um POST para processar os dados
     if request.method == 'POST':
         #Cria uma instância de form e adiciona nele as informações do request
-        form = AutorForm(request.POST, acao='adicionar', id='2')
+        form = SubBibliotecaForm(request.POST, acao='adicionar', id='2')
 
         if form.is_valid():
-            tabelas = []
-            tabelas_n = []
-            atributos = []
-
-            #Pega o nome dos atributos para verificar quais vão ser adicionados
-            for tabela in tabelas:
-                atributos.append(BD.atributos_nome(tabela))
-
-            valores = []
-            
-
-            #Salva os atributos em uma variável auxiliar para que possa excluir dentro do for 
-            #os que não vão ser utilizados
-
+           
             #Identifica os valores dos atributos que foram recebidos
             i = 0
             atributos_aux = []
-            
-            #Dicionário para saber qual tabela está ligando a primeira com Autor
-            tabela_id = {
-                }
 
-            #Informações do Autor
-            tabela = "Autor"
+            #Informações da SubBiblioteca
+            tabela = "Sub_Biblioteca"
             atributo_ = BD.atributos_nome(tabela)
             atributos_aux.extend(atributo_)
             valores = []
 
-            #Pega as informações do Autor para add no BD
+            #Pega as informações da SubBiblioteca para add no BD
             for atributo in atributos_aux:
                 if atributo in form.cleaned_data:
                     if isinstance(form.cleaned_data[atributo], datetime.date):
@@ -91,52 +74,21 @@ def autor_add(request):
                 else:
                     atributo_.remove(atributo)
 
-            #ID do último autor adicionado
-            ultimo_add = BD.ultimo_adicionado("Autor", "id_autor") + 1
+            #ID da última SubBiblioteca adicionada
+            ultimo_add = BD.ultimo_adicionado("Sub_Biblioteca", "id_subBiblioteca") + 1
             
-            #Insere o novo autor no BD
+            #Insere a nova SubBiblioteca no BD
             BD.insert(tabela, atributo_, valores)
-
-            atributos_aux = []
-            valores = []
-
-            #Pega os valores e atributos dos demais que fazem relação com autor
-            for tabela in tabelas:
-                atributos_aux.extend(atributos[i])
-                for atributo in atributos[i]:
-                    if atributo in form.cleaned_data:
-                        if isinstance(form.cleaned_data[atributo], datetime.date):
-                            valores.append(form.cleaned_data[atributo].strftime("%d/%m/%Y"))
-                        else:
-                            if type(form.cleaned_data[atributo]) is list:
-                                for lista in form.cleaned_data[atributo]:
-                                    valores.append(lista)
-                            else:
-                                valores.append(form.cleaned_data[atributo])
-                    else:
-                        atributos_aux.remove(atributo)
-                
-                #Adiciona no BD as relações
-                i += 1
-                for valor in valores:
-                    tabela_add = tabela_id[tabela]
-                    atributos_add = ["id_autor", atributos_aux[0]]
-                    valores_add = [ultimo_add,valor]
-
-                    BD.insert(tabela_add, atributos_add, valores_add)
-
-                atributos_aux = []
-                valores = []
 
             BD.close()
             
 
-            #Volta para a página dos autores
-            return HttpResponseRedirect('/autor/')
+            #Volta para a página das subBiblioteca
+            return HttpResponseRedirect('/subBiblioteca/')
 
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
-        form = AutorForm(acao='adicionar', id='2')
+        form = SubBibliotecaForm(acao='adicionar', id='2')
 
     retorno['form'] = form  
     retorno['titulo'] = titulo_pagina
@@ -146,11 +98,11 @@ def autor_add(request):
 
     return render(request, 'acervo/add.html', retorno)
 
-def autor_delete(request, autor_id):
+def subBiblioteca_delete(request, subBiblioteca_id):
     usuario = "postgres"
     senha = "admin123"
 
-    tabela = "Autor"
+    tabela = "Sub_Biblioteca"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     retorno["titulo"] = "Not Found - Retorne ao Acervo"
@@ -159,25 +111,25 @@ def autor_delete(request, autor_id):
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    condicao = "id_autor = %s" % autor_id
+    condicao = "id_subBiblioteca = %s" % subBiblioteca_id
     
     BD.delete(tabela, condicao)
 
-    return autor_list(request)
+    return subBiblioteca_list(request)
 
-def autor_edit(request, autor_id):    
+def subBiblioteca_edit(request, subBiblioteca_id):    
     usuario = "postgres"
     senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Autor"
+    tabela = "Sub_Biblioteca"
     acao = "Edição - "+ tabela
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     #Verifica se é um POST para processar os dados
     if request.method == 'POST':
         #Cria uma instância de form e adiciona nele as informações do request
-        form = AutorForm(request.POST, acao='editar', id=autor_id)
+        form = SubBibliotecaForm(request.POST, acao='editar', id=subBiblioteca_id)
 
         if form.is_valid():
             tabelas = []
@@ -198,20 +150,20 @@ def autor_edit(request, autor_id):
             i = 0
             atributos_aux = []
             
-            #Dicionário para saber qual tabela está ligando a primeira com Autor
+            #Dicionário para saber qual tabela está ligando a primeira com subBiblioteca
             tabela_relacoes = {
             }
 
             #Dicionário para saber qual é o id de cada tabela
-            id_autor = "id_autor"
+            id_subBiblioteca = "id_subBiblioteca"
 
-            #Informações da Autor
-            tabela = "Autor"
+            #Informações da subBiblioteca
+            tabela = "Sub_Biblioteca"
             atributo_ = BD.atributos_nome(tabela)
             atributos_aux.extend(atributo_)
             atualizacoes = []
 
-            #Pega as informações da Autor para add no BD
+            #Pega as informações da subBiblioteca para add no BD
             for atributo in atributos_aux:
                 if atributo in form.cleaned_data:
                     if isinstance(form.cleaned_data[atributo], datetime.date):
@@ -232,16 +184,16 @@ def autor_edit(request, autor_id):
                     atributo_.remove(atributo)
 
             atualizacoes = ', '.join(atualizacoes)
-            condicao = "{0} = {1}".format(id_autor, autor_id)
+            condicao = "{0} = {1}".format(id_subBiblioteca, subBiblioteca_id)
 
-            #Atualiza a autor
+            #Atualiza a subBiblioteca
             BD.update(tabela, atualizacoes, condicao)
 
 
             atributos_aux = []
             atualizacoes = []
 
-            #Pega os valores e atributos dos demais que fazem relação com autor
+            #Pega os valores e atributos dos demais que fazem relação com subBiblioteca
             for tabela in tabelas:
                 atributos_aux.extend(atributos[i])
                 for atributo in atributos[i]:
@@ -259,15 +211,15 @@ def autor_edit(request, autor_id):
                 for valor in atualizacoes:
                     tabela_atualiza = tabela_relacoes[tabela]
 
-                    condicao = "{0} = {1}".format(id_autor, autor_id)
+                    condicao = "{0} = {1}".format(id_subBiblioteca, subBiblioteca_id)
                     BD.delete(tabela_atualiza, condicao)
 
                 #Adiciona as novas relações
                 for valor in atualizacoes:
                     tabela_atualiza = tabela_relacoes[tabela]
 
-                    atributos_add = [id_autor, atributos_aux[0]]
-                    valores_add = [autor_id, valor]
+                    atributos_add = [id_subBiblioteca, atributos_aux[0]]
+                    valores_add = [subBiblioteca_id, valor]
                     BD.insert(tabela_atualiza, atributos_add, valores_add)
                     
 
@@ -278,12 +230,12 @@ def autor_edit(request, autor_id):
             BD.close()
             
 
-            #Volta para a página dos autores
-            return HttpResponseRedirect('/autor/{0}'.format(autor_id))
+            #Volta para a página das subBiblioteca
+            return HttpResponseRedirect('/subBiblioteca/{0}'.format(subBiblioteca_id))
 
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
-        form = AutorForm(acao='editar', id=autor_id)
+        form = SubBibliotecaForm(acao='editar', id=subBiblioteca_id)
 
     retorno['form'] = form  
     retorno['titulo'] = titulo_pagina
@@ -293,10 +245,9 @@ def autor_edit(request, autor_id):
 
     return render(request, 'acervo/add.html', retorno)
 
-#Informações de uma editora específica
-def autor_detail(request, autor_id):    
-    if autor_id is None:
-        return autor_list(request)
+def subBiblioteca_detail(request, subBiblioteca_id):    
+    if subBiblioteca_id is None:
+        return subBiblioteca_list(request)
 
     usuario = "postgres"
     senha = "admin123"
@@ -304,21 +255,25 @@ def autor_detail(request, autor_id):
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
-    tabela = "Autor"
+    tabela = "Sub_Biblioteca"
 
     atributos = []
-    atributos.append(['id_autor as id', 'nome', 'data_nascimento', 'data_falecimento', 'nacionalidade', 'biografia'])
+    atributos.append(['id_subBiblioteca as id', 'nome'])
+    #atributos.append(['sequencia as id','Obra.titulo as titulo'])
+    atributos.append(['id_obra as id','Obra.titulo as titulo'])
 
-    condicao = "id_autor = %s" % autor_id
+    condicao = "id_subBiblioteca = %s" % subBiblioteca_id
+    tipo_select= "distinct"
     
     join_ = []
     join_.append('')
+    join_.append("JOIN Exemplar USING(id_subBiblioteca) " + "JOIN Obra USING(id_obra)")
 
-    tabelas = ["autores"]
+    tabelas = ["Sub_Biblioteca","obras"]
 
     i = 0
     for nome_tabela in tabelas:
-        retorno[nome_tabela] =  BD.select(tabela, atributos[i], where=condicao, join=join_[i])
+        retorno[nome_tabela] =  BD.select(tabela, atributos[i], tipo_select=tipo_select, where=condicao, join=join_[i])
         i += 1
 
     BD.close()
@@ -327,4 +282,4 @@ def autor_detail(request, autor_id):
     retorno["linkTitulo"] = linkTitulo
     retorno["add"] = 'add_' + tabela
 
-    return render(request, 'acervo/autor_informacoes.html', retorno)
+    return render(request, 'acervo/subBiblioteca_informacoes.html', retorno)

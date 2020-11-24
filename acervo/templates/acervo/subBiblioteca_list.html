@@ -1,0 +1,9 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    {% for subBiblioteca in subBiblioteca %}
+        <div class="obra">
+            <h2><a href="{% url 'subBiblioteca_detail' subBiblioteca.id %}">{{ subBiblioteca.nome }}</a></h2>
+        </div>
+    {% endfor %}
+{% endblock %}

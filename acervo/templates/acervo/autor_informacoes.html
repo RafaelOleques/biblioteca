@@ -9,18 +9,17 @@
             <p><b>Nome:<b> {{ autor.nome|linebreaksbr }}</p>
 
             <p><b>Data de Nascimento:<b> {{ autor.data_nascimento|linebreaksbr }}</p>
-            <p><b>Data de Falecimento:<b> {{ autor.data_falecimento|linebreaksbr }}</p>
+
+            {% if autor.data_falecimento != None %}
+                <p><b>Data de Falecimento:<b> {{ autor.data_falecimento|linebreaksbr }}</p>
+            {% endif %}            
             
             <p><b>Nacionalidade:<b> {{ autor.nacionalidade|linebreaksbr }}</p>
 
             <p><b>Biografia:<b> {{ autor.biografia|linebreaksbr }}</p>
-            
-            
-            {% comment %} <div class="date">
-                {{ autor.data_nascimento }}
-            </div> {% endcomment %}
-
 
         </div>
     {% endfor %}
 {% endblock %}
+
+
