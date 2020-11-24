@@ -263,6 +263,7 @@ def subBiblioteca_detail(request, subBiblioteca_id):
     atributos.append(['id_obra as id','Obra.titulo as titulo'])
 
     condicao = "id_subBiblioteca = %s" % subBiblioteca_id
+    tipo_select= "distinct"
     
     join_ = []
     join_.append('')
@@ -272,7 +273,7 @@ def subBiblioteca_detail(request, subBiblioteca_id):
 
     i = 0
     for nome_tabela in tabelas:
-        retorno[nome_tabela] =  BD.select(tabela, atributos[i], where=condicao, join=join_[i])
+        retorno[nome_tabela] =  BD.select(tabela, atributos[i], tipo_select=tipo_select, where=condicao, join=join_[i])
         i += 1
 
     BD.close()

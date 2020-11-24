@@ -3,24 +3,17 @@
 {% block content %}
     {% for exemplar in exemplares %}
         <div class="obra">
-            <h2><a href="{% url 'exemplar_detail' exemplar.id %}">{{ exemplar.edicao }}</a></h2>
-            <h2>{{ exemplar.edicao }}</a></h2>
-            <h2>{{ exemplar.sequencia }}</a></h2>
-            <h2>{{ exemplar.id }}</a></h2>
-            {% comment %} <h2>{{ exemplar.nome }}</h2>
+            {% comment %} <p><a href="{% url 'exemplar_edit' exemplar.id %}">Editar</a> | <a href="{% url 'exemplar_delete' exemplar.id %}">Excluir</a></p> {% endcomment %}
+            {% for obra in obras %}
+                <h2>Titulo: {{ obra.titulo }}</h2>
+                <h2>Edição: {{ exemplar.edicao }}</h2>
+                {% comment %} <h2>Edição: <a href="{% url 'exemplar_detail' exemplar.id obra.id %}">{{ exemplar.edicao }}</a></h2> {% endcomment %}
+                <h2>Sequencia: {{ exemplar.id }}</h2>
+            {% endfor %}
             
-            <p><a href="{% url 'exemplar_edit' exemplar.id %}">Editar</a> | <a href="{% url 'exemplar_delete' exemplar.id %}">Excluir</a></p>
-            <p><b>Nome:<b> {{ exemplar.nome|linebreaksbr }}</p>
-
-            <p><b>Data de Nascimento:<b> {{ exemplar.data_nascimento|linebreaksbr }}</p>
-
-            {% if exemplar.data_falecimento != None %}
+            {% comment %} {% if exemplar.data_falecimento != None %}
                 <p><b>Data de Falecimento:<b> {{ exemplar.data_falecimento|linebreaksbr }}</p>
-            {% endif %}            
-            
-            <p><b>Nacionalidade:<b> {{ exemplar.nacionalidade|linebreaksbr }}</p>
-
-            <p><b>Biografia:<b> {{ exemplar.biografia|linebreaksbr }}</p> {% endcomment %}
+            {% endif %}  {% endcomment %}
 
         </div>
     {% endfor %}

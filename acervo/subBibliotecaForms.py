@@ -19,7 +19,6 @@ class SubBibliotecaForm(forms.Form):
         super(SubBibliotecaForm, self).__init__(*args, **kwargs)
         
         if self.acao == "editar":
-            print(self.id)
             usuario = "postgres"
             senha = "admin123"
 

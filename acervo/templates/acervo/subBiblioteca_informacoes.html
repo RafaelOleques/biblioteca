@@ -9,7 +9,7 @@
             
             <p><b>Obras na Sub-Biblioteca: <b>
                 {% for obra in obras %}
-                    <li><a href="{% url 'exemplar_detail' obra.id %}">{{ obra.titulo|linebreaksbr }}</a></li>
+                    <li><a href="{% url 'exemplar_detail' subBiblioteca.id obra.id %}">{{ obra.titulo|linebreaksbr }}</a></li>
                     {% comment %} <h2><a href="{% url 'exemplar_detail' exemplar.id %}">{{ exemplar.edicao }}</a></h2> {% endcomment %}
                 {% endfor %}
             </p>

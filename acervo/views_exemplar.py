@@ -293,8 +293,8 @@ def exemplar_edit(request, exemplar_id):
 
     return render(request, 'acervo/add.html', retorno)
 
-def exemplar_detail(request, exemplar_id):    
-    if exemplar_id is None:
+def exemplar_detail(request, subBiblioteca_id, obra_id):    
+    if subBiblioteca_id is None:
         return exemplar_list(request)
 
     usuario = "postgres"
@@ -307,19 +307,23 @@ def exemplar_detail(request, exemplar_id):
 
     atributos = []
     atributos.append(['sequencia as id', 'edicao'])
-    #atributos.append(['id_obra as id','Obra.titulo as titulo'])
-
-    condicao = "sequencia = %s" % exemplar_id
+    atributos.append(['id_obra as id','Obra.titulo as titulo'])
     
+
+    #condicao = "sequencia = %s" % exemplar_id
+    condicao = "id_subBiblioteca = %s and id_obra = %s" % (subBiblioteca_id, obra_id)
+    tipo_select="distinct"
+
     join_ = []
     join_.append('')
-    #join_.append("JOIN Exemplar USING(sequencia) " + "JOIN Obra USING(id_obra)")
+    #join_.append("JOIN Obra USING(id_obra)")
+    join_.append("JOIN Sub_Biblioteca USING(id_subBiblioteca) " + "JOIN Obra USING(id_obra)")
     
-    tabelas = ["exemplares"]    
+    tabelas = ["exemplares", "obras"]    
 
     i = 0
     for nome_tabela in tabelas:
-        retorno[nome_tabela] =  BD.select(tabela, atributos[i], where=condicao, join=join_[i])
+        retorno[nome_tabela] =  BD.select(tabela, atributos[i], tipo_select=tipo_select, where=condicao, join=join_[i])
         i += 1
 
     BD.close()

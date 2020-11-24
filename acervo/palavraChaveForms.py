@@ -19,7 +19,6 @@ class PalavraChaveForm(forms.Form):
         super(PalavraChaveForm, self).__init__(*args, **kwargs)
         
         if self.acao == "editar":
-            print(self.id)
             usuario = "postgres"
             senha = "admin123"
 

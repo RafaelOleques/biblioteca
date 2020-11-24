@@ -30,7 +30,7 @@ class ConexaoBD:
             atributos = str(atributos).strip('[]').replace("'", "")
             
             #Realiza a consulta
-            consulta  = "SELECT {0} {1} FROM {2} ".format(atributos, tipo_select, tabela)
+            consulta  = "SELECT {0} {1} FROM {2} ".format(tipo_select, atributos, tabela)
             consulta += "{0} ".format(join)
             consulta += "{0} ".format(where)
             consulta += "{0} ".format(group_by)
