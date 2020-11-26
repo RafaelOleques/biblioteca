@@ -56,6 +56,16 @@
                 {% endfor %}
             </ul>
             
+            {% if generos_similares %}
+                <hr/>
+                <p><b>Lista de Obras Similares: <b></b></p>
+            {% endif %}
+
+            <ul>
+                {% for obra in generos_similares %}
+                    <li>Obra: {{ obra.titulo }}
+                {% endfor %}
+            </ul>
 
 
         </div>

@@ -28,7 +28,7 @@ def obra_list(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -53,7 +53,7 @@ def obra_add(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -173,7 +173,7 @@ def obra_delete(request, obra_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     tabela = "Obra"
 
@@ -196,7 +196,7 @@ def obra_edit(request, obra_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -334,7 +334,7 @@ def obra_detail(request, obra_id):
         return obra_list(request)
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
@@ -403,6 +403,22 @@ def obra_detail(request, obra_id):
     condicao += " AND sequencia IN ({0})".format(sub_consulta)
     
     retorno["exemplares_nao_disponiveis"] =  BD.select(tabela, atributos[-1], where=condicao, join=join_[-1])
+
+    
+    #Lista as obras que possuem mesmo genero da obra mostrada
+    tabela = "Obra"
+    atributos.append(['obra.titulo as titulo'])
+    join_.append('')        
+    
+    sub_consulta = "Select distinct c3.id_genero FROM Obra o3 natural join classificacao c3 where o3.id_obra = obra.id_obra"
+    condicao = "id_obra <> {0} AND NOT EXISTS (SELECT o2.titulo FROM Obra o2 natural join Classificacao c2 WHERE o2.id_obra = {0} AND c2.id_genero NOT IN ({1}))".format(obra_id, sub_consulta)
+
+    print("tabela::::",tabela)
+    print("atributos::::",atributos[-1])
+    print("Condicao::::",condicao)
+    print("Join::::",join_[-1])
+    
+    retorno["generos_similares"] =  BD.select(tabela, atributos[-1], where=condicao, join=join_[-1])
 
     BD.close()
 
