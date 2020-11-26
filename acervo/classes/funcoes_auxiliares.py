@@ -29,7 +29,7 @@ def verifica_atributo_numero(atributos, valores):
     atributos_ = atributos.split(', ')
     val = []
     for atributo in atributos_:
-        if "id_" in atributo:
+        if "id_" in atributo or "edicao" in atributo:
             val.append(int(valores_[i].replace("'", "")))
         else:
             val.append(valores_[i].replace("'", ""))

@@ -13,6 +13,9 @@ def formata_data_BD(data):
 
 #Caso entre em um link inválido
 def obra_redirect(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     retorno = {}
     retorno["titulo"] = "Not Found - Retorne ao Acervo"
     retorno["linkTitulo"] = linkTitulo
@@ -21,8 +24,11 @@ def obra_redirect(request):
 
 #Lista todas as obras
 def obra_list(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -43,8 +49,11 @@ def obra_list(request):
     return render(request, 'acervo/obra_list.html', retorno)
 
 def obra_add(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -160,8 +169,11 @@ def obra_add(request):
     return render(request, 'acervo/add.html', retorno)
 
 def obra_delete(request, obra_id):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     tabela = "Obra"
 
@@ -180,8 +192,11 @@ def obra_delete(request, obra_id):
 
 
 def obra_edit(request, obra_id):    
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -311,12 +326,15 @@ def obra_edit(request, obra_id):
     return render(request, 'acervo/add.html', retorno)
 
 #Informações de uma obra específica
-def obra_detail(request, obra_id):    
+def obra_detail(request, obra_id):   
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     if obra_id is None:
         return obra_list(request)
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 

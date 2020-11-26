@@ -12,8 +12,11 @@ def formata_data_BD(data):
     return "datetime.date(%s, %s, %s)" % nova_data[0], nova_data[1], nova_data[2]
 
 def palavraChave_list(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Palavras_Chaves"
@@ -33,8 +36,11 @@ def palavraChave_list(request):
     return render(request, 'acervo/palavraChave_list.html', retorno)
 
 def palavraChave_add(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Palavras_Chaves"
@@ -99,8 +105,11 @@ def palavraChave_add(request):
     return render(request, 'acervo/add.html', retorno)
 
 def palavraChave_delete(request, palavraChave_id):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     tabela = "Palavras_Chaves"
 
@@ -117,9 +126,12 @@ def palavraChave_delete(request, palavraChave_id):
 
     return palavraChave_list(request)
 
-def palavraChave_edit(request, palavraChave_id):    
+def palavraChave_edit(request, palavraChave_id):  
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Palavras_Chaves"
@@ -245,12 +257,15 @@ def palavraChave_edit(request, palavraChave_id):
 
     return render(request, 'acervo/add.html', retorno)
 
-def palavraChave_detail(request, palavraChave_id):    
+def palavraChave_detail(request, palavraChave_id):   
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+         
     if palavraChave_id is None:
         return palavraChave_list(request)
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 

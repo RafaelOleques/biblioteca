@@ -12,8 +12,11 @@ def formata_data_BD(data):
     return "datetime.date(%s, %s, %s)" % nova_data[0], nova_data[1], nova_data[2]
 
 def subBiblioteca_list(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+        
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Sub_Biblioteca"
@@ -33,8 +36,11 @@ def subBiblioteca_list(request):
     return render(request, 'acervo/subBiblioteca_list.html', retorno)
 
 def subBiblioteca_add(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Sub_Biblioteca"
@@ -99,8 +105,11 @@ def subBiblioteca_add(request):
     return render(request, 'acervo/add.html', retorno)
 
 def subBiblioteca_delete(request, subBiblioteca_id):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     tabela = "Sub_Biblioteca"
 
@@ -118,8 +127,11 @@ def subBiblioteca_delete(request, subBiblioteca_id):
     return subBiblioteca_list(request)
 
 def subBiblioteca_edit(request, subBiblioteca_id):    
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Sub_Biblioteca"
@@ -246,11 +258,14 @@ def subBiblioteca_edit(request, subBiblioteca_id):
     return render(request, 'acervo/add.html', retorno)
 
 def subBiblioteca_detail(request, subBiblioteca_id):    
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+        
     if subBiblioteca_id is None:
         return subBiblioteca_list(request)
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 

@@ -5,7 +5,7 @@ from .classes.funcoes_auxiliares import *
 #Formulário padrão para uma palavraChave
 class SubBibliotecaForm(forms.Form):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
@@ -20,7 +20,7 @@ class SubBibliotecaForm(forms.Form):
         
         if self.acao == "editar":
             usuario = "postgres"
-            senha = "admin123"
+            senha = "#Fantasma10"
 
             tabela = "Sub_Biblioteca"
 

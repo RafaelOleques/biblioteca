@@ -5,15 +5,15 @@ from .classes.funcoes_auxiliares import *
 #Formulário padrão para um exemplar
 class ExemplarForm(forms.Form):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     #numérico
-    edicao = forms.CharField(label='Título', max_length=100)
+    edicao = forms.CharField(label='Edição', max_length=100)
     
     subBiblitecas = BD.select("Sub_Biblioteca", ["id_subBiblioteca", "nome"], nome_atributo=False)
-    id_subBiblioteca = forms.ChoiceField(label='Sub-Biblioteca', widget=forms.Select, choices=subBiblitecas)
+    id_subbiblioteca = forms.ChoiceField(label='Sub-Biblioteca', widget=forms.Select, choices=subBiblitecas)
 
     BD.close()
 
@@ -24,7 +24,7 @@ class ExemplarForm(forms.Form):
         '''
         if self.acao == "editar":
             usuario = "postgres"
-            senha = "admin123"
+            senha = "#Fantasma10"
 
             tabela = "Exemplar"
 

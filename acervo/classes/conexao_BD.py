@@ -99,14 +99,19 @@ class ConexaoBD:
     #Recebe o nome da tabela, os atributos em forma de lista e os valores em forma de lista
     def insert(self, tabela, atributos, valores):
         try:
+            print("11111111111111111")
             atributos = valida_lista(atributos)
             atributos = formata_lista_string(atributos)
-    
+            print("2222222222222222222")
             valores = valida_lista(valores)
+            print("3333333333333333333")
             valores = formata_lista_string(valores, aspas=True)
+            print("44444444444444444", atributos, valores)
             valores = verifica_atributo_numero(atributos, valores)
+            print("55555555555555")
             operacao  = """INSERT INTO %s (%s) 
             VALUES(%s);""" % (tabela, atributos, valores)
+            print(operacao)
             self.cursor.execute(operacao)
             self.conn.commit()
 
@@ -149,7 +154,7 @@ class ConexaoBD:
 
 if __name__ == '__main__':
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     titulo = "Lista de Livros"

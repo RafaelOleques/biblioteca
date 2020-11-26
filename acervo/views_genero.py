@@ -12,8 +12,11 @@ def formata_data_BD(data):
     return "datetime.date(%s, %s, %s)" % nova_data[0], nova_data[1], nova_data[2]
 
 def genero_list(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Genero"
@@ -33,8 +36,11 @@ def genero_list(request):
     return render(request, 'acervo/genero_list.html', retorno)
 
 def genero_add(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Genero"
@@ -99,8 +105,11 @@ def genero_add(request):
     return render(request, 'acervo/add.html', retorno)
 
 def genero_delete(request, genero_id):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     tabela = "Genero"
 
@@ -117,9 +126,12 @@ def genero_delete(request, genero_id):
 
     return genero_list(request)
 
-def genero_edit(request, genero_id):    
+def genero_edit(request, genero_id):   
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Genero"
@@ -245,12 +257,15 @@ def genero_edit(request, genero_id):
 
     return render(request, 'acervo/add.html', retorno)
 
-def genero_detail(request, genero_id):    
+def genero_detail(request, genero_id):   
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+         
     if genero_id is None:
         return genero_list(request)
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
