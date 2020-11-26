@@ -3,7 +3,7 @@ from .classes.conexao_BD import ConexaoBD
 
 class UsuarioLoginForm(forms.Form):
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 

@@ -28,7 +28,7 @@ def obra_list(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -53,7 +53,7 @@ def obra_add(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -173,7 +173,7 @@ def obra_delete(request, obra_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     tabela = "Obra"
 
@@ -196,7 +196,7 @@ def obra_edit(request, obra_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -334,38 +334,37 @@ def obra_detail(request, obra_id):
         return obra_list(request)
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
 
-    #Atributos para cada um dos select
+    #Atributos e joins para cada um dos select
     #Cada posição da lista corresponde a um select
     atributos = []
+    join_ = []
+
     atributos.append(['id_obra as id', 'isbn', 'titulo', 'ano_publicacao'])
+    join_.append('')
+
     atributos.append('Autor.nome as nome')
+    join_.append("JOIN Autoria USING(id_obra) " + "JOIN Autor USING(id_autor)")
+
     atributos.append('Genero.nome as nome')
+    join_.append("JOIN Classificacao USING(id_obra) " + "JOIN Genero USING (id_genero)")
+
     atributos.append('Palavras_Chaves.nome as nome')
+    join_.append("JOIN Assunto USING(id_obra)" + "JOIN Palavras_Chaves USING (id_palavra_chave)")
+
     atributos.append('Editora.nome as nome')
-    atributos.append(['Exemplar.edicao as edicao', 'Sub_Biblioteca.nome as sub_biblioteca'])
+    join_.append("JOIN Editora USING (id_editora)")
 
     condicao = "id_obra = %s" % obra_id
-    
-    #Joins para os select
-    #Cada posição da lista corresponde a um select, sendo utilizado com o correspondente
-    #da lista "atributos" que foi isntanciada acima
-    join_ = []
-    join_.append('')
-    join_.append("JOIN Autoria USING(id_obra) " + "JOIN Autor USING(id_autor)")
-    join_.append("JOIN Classificacao USING(id_obra) " + "JOIN Genero USING (id_genero)")
-    join_.append("JOIN Assunto USING(id_obra)" + "JOIN Palavras_Chaves USING (id_palavra_chave)")
-    join_.append("JOIN Editora USING (id_editora)")
-    join_.append("JOIN Exemplar USING (id_obra) " + "JOIN Sub_Biblioteca USING (id_subBiblioteca)")
 
     #Nome das tabelas que será retornado para a página
-    tabelas = ["obras", "autores", "generos", "palavras_chaves", "editoras", "exemplares"]
+    tabelas = ["obras", "autores", "generos", "palavras_chaves", "editoras"]
 
     i = 0
     #Realização das consultas, salvando o resultado em um dicionário com o indice como
@@ -373,6 +372,37 @@ def obra_detail(request, obra_id):
     for nome_tabela in tabelas:
         retorno[nome_tabela] =  BD.select(tabela, atributos[i], where=condicao, join=join_[i])
         i += 1
+
+    #Adiciona os exemplares que não estão reservados
+    atributos.append(['sequencia', 'Exemplar.edicao as edicao', 'Sub_Biblioteca.nome as sub_biblioteca'])
+    join_.append("JOIN Exemplar USING (id_obra) " + "JOIN Sub_Biblioteca USING (id_subBiblioteca)")
+    
+    condicao  = "id_obra = {0} ".format(obra_id)
+    
+    sub_consulta  = "SELECT sequencia FROM Emprestimo_Corrente "
+    sub_consulta += "WHERE id_obra = {0}".format(obra_id)
+
+    condicao += " AND sequencia NOT IN ({0})".format(sub_consulta)
+    
+    print("tabela::::",tabela)
+    print("atributos::::",atributos[-1])
+    print("Condicao::::",condicao)
+    print("Join::::",join_[-1])
+
+    retorno["exemplares_disponiveis"] =  BD.select(tabela, atributos[-1], where=condicao, join=join_[-1])
+
+    #Adiciona os exemplares que estão reservados
+    atributos.append(['Exemplar.edicao as edicao', 'Sub_Biblioteca.nome as sub_biblioteca'])
+    join_.append("JOIN Exemplar USING (id_obra) " + "JOIN Sub_Biblioteca USING (id_subBiblioteca)")
+    
+    condicao  = "id_obra = {0} ".format(obra_id)
+    
+    sub_consulta  = "SELECT sequencia FROM Emprestimo_Corrente "
+    sub_consulta += "WHERE id_obra = {0}".format(obra_id)
+
+    condicao += " AND sequencia IN ({0})".format(sub_consulta)
+    
+    retorno["exemplares_nao_disponiveis"] =  BD.select(tabela, atributos[-1], where=condicao, join=join_[-1])
 
     BD.close()
 

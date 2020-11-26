@@ -16,7 +16,7 @@ def autor_list(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Autor"
@@ -40,7 +40,7 @@ def autor_add(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Autor"
@@ -157,7 +157,7 @@ def autor_delete(request, autor_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     tabela = "Autor"
 
@@ -179,7 +179,7 @@ def autor_edit(request, autor_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Autor"
@@ -314,7 +314,7 @@ def autor_detail(request, autor_id):
         return autor_list(request)
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 

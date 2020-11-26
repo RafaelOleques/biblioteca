@@ -16,7 +16,7 @@ def subBiblioteca_list(request):
         return HttpResponseRedirect('/login/')
         
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Sub_Biblioteca"
@@ -40,7 +40,7 @@ def subBiblioteca_add(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Sub_Biblioteca"
@@ -109,7 +109,7 @@ def subBiblioteca_delete(request, subBiblioteca_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     tabela = "Sub_Biblioteca"
 
@@ -131,7 +131,7 @@ def subBiblioteca_edit(request, subBiblioteca_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Sub_Biblioteca"
@@ -265,7 +265,7 @@ def subBiblioteca_detail(request, subBiblioteca_id):
         return subBiblioteca_list(request)
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 

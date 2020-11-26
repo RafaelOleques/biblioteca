@@ -22,7 +22,7 @@ def usuario_login(request):
             #Tipo de usuário
 
             usuario = "postgres"
-            senha = "#Fantasma10"
+            senha = "admin123"
 
             retorno = {} #Variável que armazena informações para serem escritas no HTML
             tabela = "Usuario"
@@ -70,7 +70,7 @@ def usuario_login(request):
 
 def usuario_add(request):
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Usuario"
@@ -140,7 +140,7 @@ def usuario_detail(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Usuario"
@@ -161,7 +161,7 @@ def usuario_detail(request):
 
     #Empréstimos corrente
     tabela = "Emprestimo_Corrente"
-    atributos = ["titulo", "edicao", "data_emprestimo", "data_devolucao"]
+    atributos = ["Obra.id_obra as id", "sequencia", "titulo", "edicao", "data_emprestimo", "data_devolucao"]
     condicao = "codigo_usuario = {0}".format(request.session['id_usuario'])
 
     join  = "JOIN Usuario ON Emprestimo_Corrente.codigo_usuario = Usuario.codigo "
@@ -172,7 +172,17 @@ def usuario_detail(request):
     emprestimos_corrente = informacoes
 
     #Histórico de empréstimos
-    
+    tabela = "Emprestimo_Historico"
+    atributos = "count(id_obra) as nro_historico"
+    condicao = "codigo_usuario = {0}".format(request.session['id_usuario'])
+    group_by = "codigo_usuario"
+
+    informacoes = BD.select(tabela, atributos, where=condicao, group_by=group_by)
+
+    if informacoes == []:
+        total_livros_historico = 0
+    else:
+        total_livros_historico = informacoes[0]["nro_historico"]
 
     #Total de livros com o usuário
     tabela = "Emprestimo_Corrente"
@@ -185,8 +195,7 @@ def usuario_detail(request):
     if informacoes == []:
         total_livros_corrente = 0
     else:
-        total_livros_corrente = informacoes[0]
-    print(":::::::::::::",informacoes)
+        total_livros_corrente = informacoes[0]["nro_emprestimos"]
 
 
     BD.close()
@@ -198,5 +207,6 @@ def usuario_detail(request):
     retorno["total_livros_corrente"] = total_livros_corrente
     retorno["emprestimos_corrente"] = emprestimos_corrente
     retorno["tipo_usuario"] = tipo_usuario
+    retorno["total_livros_historico"] = total_livros_historico
 
     return render(request, 'acervo/usuario_informacoes.html', retorno)

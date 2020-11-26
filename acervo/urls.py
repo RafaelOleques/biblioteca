@@ -24,7 +24,9 @@ urlpatterns = [
     path('acervo/obra/edit/<str:obra_id>/', views_obra.obra_edit, name='obra_edit'),
     path('acervo/obra/delete/<str:obra_id>/', views_obra.obra_delete, name='obra_delete'),
 
-    path('acervo/obra/exemplar/add/<str:obra_id>', views_exemplar.exemplar_add, name='exemplar_add'),
+    path('acervo/obra/<str:obra_id>/exemplar/add/', views_exemplar.exemplar_add, name='exemplar_add'),
+    path('acervo/obra/<str:obra_id>/exemplar/<str:sequencia>/reserva/', views_exemplar.exemplar_reserva, name='exemplar_reserva'),
+    path('acervo/obra/<str:obra_id>/exemplar/<str:sequencia>/devolve/', views_exemplar.exemplar_devolucao, name='exemplar_devolucao'),
 
     path('editora/', views_editora.editora_list, name='editora_list'),
     path('editora/add/', views_editora.editora_add, name='add_Editora'),

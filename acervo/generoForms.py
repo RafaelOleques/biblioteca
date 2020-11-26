@@ -5,7 +5,7 @@ from .classes.funcoes_auxiliares import *
 #Formulário padrão para um genero
 class GeneroForm(forms.Form):
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
@@ -20,7 +20,7 @@ class GeneroForm(forms.Form):
         
         if self.acao == "editar":
             usuario = "postgres"
-            senha = "#Fantasma10"
+            senha = "admin123"
 
             tabela = "Genero"
 

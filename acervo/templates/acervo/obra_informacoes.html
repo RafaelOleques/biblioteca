@@ -36,16 +36,25 @@
                 {% endfor %}
             </p>
 
-            {% if exemplares %}
+            {% if exemplares_disponiveis %}
                 <hr/>
 
                 <p><b>Exemplares: <b></b></p>
-                <ul>
-                    {% for exemplar in exemplares %}
-                        <li>Edição: {{ exemplar.edicao }} | Local: {{ exemplar.sub_biblioteca }} | Status: Reservado</li>
-                    {% endfor %}
-                </ul>
             {% endif %}
+            
+            <ul>
+                {% for exemplar in exemplares_disponiveis %}
+                    <li>Edição: {{ exemplar.edicao }} | Local: {{ exemplar.sub_biblioteca }} | Status: <a href="{% url 'exemplar_reserva' obra.id exemplar.sequencia %}">Disponível</a></li>
+                {% endfor %}
+            </ul>
+
+            <ul>
+                {% for exemplar in exemplares_nao_disponiveis %}
+                    <li>Edição: {{ exemplar.edicao }} | Local: {{ exemplar.sub_biblioteca }} | Status: Reservado</li>
+                {% endfor %}
+            </ul>
+            
+
 
         </div>
     {% endfor %}

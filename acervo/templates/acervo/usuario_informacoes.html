@@ -7,16 +7,22 @@
         <p><a href="../acervo/">Acervo</a> | <a href="../subBiblioteca/">Bibliotecas</a></p>
 
         <p><b>Tipo de usuário:<b> {{ tipo_usuario|linebreaksbr }}</p>
-        <p><b>Total de empréstimos corrente:<b> {{ total_livros_corrente|linebreaksbr }}</p>
+        <p><b>Total de livros com o usuário:<b> {{ total_livros_corrente|linebreaksbr }}</p>
+        <p><b>Total de livros já devolvidos:<b> {{ total_livros_historico|linebreaksbr }}</p>
         
-        {% if exemplares %}
+        {% if emprestimos_corrente %}
+            <hr/>
             <p><b>Empréstimo corrente: <b>
                 <ul>
                 {% for emprestimo_corrente in emprestimos_corrente %}
-                    <li>Livro: {{ emprestimo_corrente.titulo }}, 
-                        Edicao: {{ emprestimo_corrente.edicao }},
-                        Data do empréstimo: {{ emprestimo_corrente.data_emprestimo }}
-                        Data de devolução esperada: {{ emprestimo_corrente.data_devolucao }}</li>
+                    <li><a href="{% url 'obra_detail' emprestimo_corrente.id %}">{{ emprestimo_corrente.titulo }}</a>
+                        <ul>
+                            <li<a href="{% url 'exemplar_devolucao' emprestimo_corrente.id emprestimo_corrente.sequencia%}">Devolver</a></li>
+                            <li>Edicao: {{ emprestimo_corrente.edicao }}</li>
+                            <li> Data do empréstimo: {{ emprestimo_corrente.data_emprestimo }}</li>
+                            <li>Data de devolução esperada: {{ emprestimo_corrente.data_devolucao }}</li>
+                        </ul>
+                    </li>
                 {% endfor %}
                 </ul>
             </p>

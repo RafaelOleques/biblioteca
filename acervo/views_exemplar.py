@@ -2,17 +2,90 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .classes.conexao_BD import ConexaoBD
 from .exemplarForms import ExemplarForm
-import datetime
+from datetime import date
 
 titulo_pagina = "Livros do Acervo"
 linkTitulo   = "obra_list"
+
+def exemplar_reserva(request, obra_id, sequencia):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
+    usuario = "postgres"
+    senha = "admin123"
+
+    tabela = "Exemplar"
+
+    BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
+
+    tabela = "Emprestimo_Corrente"
+
+    atributos = ["id_obra", "sequencia", "codigo_usuario", "data_emprestimo", "data_devolucao"]
+
+    data_atual = date.today()
+    proxima_data = date.fromordinal(data_atual.toordinal()+7)
+
+    data_emprestimo = data_atual.strftime('%d/%m/%Y')
+    data_devolucao = proxima_data.strftime('%d/%m/%Y')
+
+    valores = [obra_id, sequencia, request.session['id_usuario'], data_emprestimo, data_devolucao]
+
+    BD.insert(tabela, atributos, valores)
+
+    inf = BD.select(tabela, atributos)
+
+    BD.close()
+
+    return HttpResponseRedirect('/acervo/obra/{0}'.format(obra_id))
+
+def exemplar_devolucao(request, obra_id, sequencia):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
+    usuario = "postgres"
+    senha = "admin123"
+
+    tabela = "Exemplar"
+
+    BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
+
+    #Pega as informações do empréstimo corrente para adicionar no histórico
+    tabela = "Emprestimo_Corrente"
+    atributos = ["id_obra", "sequencia", "codigo_usuario", "data_emprestimo", "data_devolucao"]
+    condicao = "id_obra = {0} AND sequencia = {1}".format(obra_id, sequencia)
+
+    emprestimo_corrente = BD.select(tabela, atributos, where=condicao)
+    emprestimo_corrente = emprestimo_corrente[0]
+
+    data_atual = date.today()
+    data_devolucao_efetiva = data_atual.strftime('%d/%m/%Y')
+
+    #Deleta o empréstimo corrente
+    BD.delete(tabela, condicao)
+
+    #Pega as informações para a
+
+    tabela = "Emprestimo_Historico"
+    atributos = ["id_obra", "sequencia", "codigo_usuario", "data_emprestimo", "data_devolucao_prevista", "data_devolucao_efetiva"]
+    
+    valores = [obra_id, sequencia, request.session['id_usuario'], emprestimo_corrente["data_emprestimo"], emprestimo_corrente["data_devolucao"], data_devolucao_efetiva]
+
+    BD.insert(tabela, atributos, valores)
+
+    BD.close()
+
+    return HttpResponseRedirect('/usuario/')
+
+
+
+    
 
 def exemplar_add(request, obra_id):
     if 'id_usuario' not in request.session:
         return HttpResponseRedirect('/login/')
         
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Exemplar"

@@ -16,7 +16,7 @@ def palavraChave_list(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Palavras_Chaves"
@@ -40,7 +40,7 @@ def palavraChave_add(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Palavras_Chaves"
@@ -109,7 +109,7 @@ def palavraChave_delete(request, palavraChave_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     tabela = "Palavras_Chaves"
 
@@ -131,7 +131,7 @@ def palavraChave_edit(request, palavraChave_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Palavras_Chaves"
@@ -265,7 +265,7 @@ def palavraChave_detail(request, palavraChave_id):
         return palavraChave_list(request)
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
