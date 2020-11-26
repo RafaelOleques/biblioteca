@@ -9,7 +9,9 @@
     </head>
     <body>
         <div class="page-header">
-            <a href="{% url add %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+            {% if request.session.tipo_usuario == "Administrador" or request.session.tipo_usuario == "Bibliotecário" %}
+                <a href="{% url add %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+            {% endif %}
             <h1><a href="{% url linkTitulo %}">{{ titulo }}</a></h1>
         </div>
         <div class="content container">

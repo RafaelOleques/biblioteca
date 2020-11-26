@@ -8,8 +8,11 @@
 
         <p><b>Tipo de usuário:<b> {{ tipo_usuario|linebreaksbr }}</p>
         <p><b>Total de livros com o usuário:<b> {{ total_livros_corrente|linebreaksbr }}</p>
-        <p><b>Total de livros já devolvidos:<b> {{ total_livros_historico|linebreaksbr }}</p>
-        
+            
+        {% for livro_genero in livros_genero %}
+            <p><b>Total de livros já lidos de {{ livro_genero.nome }}:<b> {{ livro_genero.quantidade|linebreaksbr }}</p>
+        {% endfor %}
+
         {% if emprestimos_corrente %}
             <hr/>
             <p><b>Empréstimo corrente: <b>

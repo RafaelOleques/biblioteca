@@ -25,6 +25,7 @@ class ConexaoBD:
             #operacoes = " " + (join if join else "") + " " + (" WHERE "+where if where else "")
             where = (" WHERE "+where if where else "")
             group_by = (" GROUP BY "+group_by if group_by != "" else "")
+            having = (" HAVING "+having if having != "" else "")
 
             #Converte a lista em uma string com os atributos separados por virgula
             atributos = str(atributos).strip('[]').replace("'", "")
@@ -36,6 +37,8 @@ class ConexaoBD:
             consulta += "{0} ".format(group_by)
             consulta += "{0} ".format(having)
             consulta += "{0} ".format(order_by)
+
+            print(consulta)
   
 
             #self.cursor.execute("SELECT %s %s FROM %s %s;" % (tipo_select, atributos, tabela, operacoes))
@@ -52,8 +55,8 @@ class ConexaoBD:
     #    -> Deve-se notar que o método não retornará o nome dos atributos no caso que se tenha
     #       um select com * e um join
     # 2. Caso contrário, retorna uma lista com as tuplas
-    def select(self, tabela, atributos, tipo_select="", join="", where="", group_by="", nome_atributo=True):
-        tuplas = self._select(tabela, atributos, tipo_select, join, where, group_by)
+    def select(self, tabela, atributos, tipo_select="", join="", where="", group_by="", having="", nome_atributo=True):
+        tuplas = self._select(tabela, atributos, tipo_select, join, where, group_by, having=having)
 
         if atributos == "*" and join is None:
             atributos = self.atributos_nome(tabela)

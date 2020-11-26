@@ -171,19 +171,6 @@ def usuario_detail(request):
     informacoes = BD.select(tabela, atributos, where=condicao, join=join)
     emprestimos_corrente = informacoes
 
-    #Histórico de empréstimos
-    tabela = "Emprestimo_Historico"
-    atributos = "count(id_obra) as nro_historico"
-    condicao = "codigo_usuario = {0}".format(request.session['id_usuario'])
-    group_by = "codigo_usuario"
-
-    informacoes = BD.select(tabela, atributos, where=condicao, group_by=group_by)
-
-    if informacoes == []:
-        total_livros_historico = 0
-    else:
-        total_livros_historico = informacoes[0]["nro_historico"]
-
     #Total de livros com o usuário
     tabela = "Emprestimo_Corrente"
     atributos = "count(id_obra) as nro_emprestimos"
@@ -197,6 +184,17 @@ def usuario_detail(request):
     else:
         total_livros_corrente = informacoes[0]["nro_emprestimos"]
 
+    #Quantidade de livros por gênero
+    tabela = "Obra"
+    atributos = ['Genero.nome as nome', 'COUNT(id_genero) as quantidade']
+    join  = 'JOIN Emprestimo_Historico USING(id_obra) ' +' JOIN Classificacao USING(id_obra) '
+    join += ' JOIN Genero USING (id_genero) '
+    condicao = 'Emprestimo_Historico.codigo_usuario = {0}'.format(request.session['id_usuario'])
+    group_by =  'nome'
+
+    print("******************************************************")
+    livros_genero = BD.select(tabela, atributos, join=join, where=condicao, group_by=group_by)
+
 
     BD.close()
     
@@ -207,6 +205,6 @@ def usuario_detail(request):
     retorno["total_livros_corrente"] = total_livros_corrente
     retorno["emprestimos_corrente"] = emprestimos_corrente
     retorno["tipo_usuario"] = tipo_usuario
-    retorno["total_livros_historico"] = total_livros_historico
+    retorno["livros_genero"] = livros_genero
 
     return render(request, 'acervo/usuario_informacoes.html', retorno)

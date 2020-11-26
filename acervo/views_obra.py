@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .classes.conexao_BD import ConexaoBD
-from .obraForms import ObraForm
+from .obraForms import *
 import datetime
 
 titulo_pagina = "Livros do Acervo"
@@ -28,7 +28,7 @@ def obra_list(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -37,12 +37,25 @@ def obra_list(request):
 
     atributos = ['id_obra as id', 'isbn', 'titulo', 'ano_publicacao']
 
-    informacoes = BD.select(tabela, atributos)
+    join = ""
+    group_by = ""
+    having = ""
+
+    if request.method == 'POST':
+        atributos.append("COUNT(id_genero)")
+        join = " JOIN Classificacao USING(id_obra) "+" JOIN Genero USING (id_genero) "
+        group_by = 'id, isbn, titulo, ano_publicacao'
+        having = "count(id_genero) > 1 "
+
+
+
+    informacoes = BD.select(tabela, atributos, join=join, group_by=group_by, having=having)
 
     retorno["obras"] = informacoes
     retorno["titulo"] = titulo_pagina
     retorno["linkTitulo"] = linkTitulo
     retorno["add"] = 'add_' + tabela
+    
 
     BD.close()
 
@@ -53,7 +66,7 @@ def obra_add(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -173,7 +186,7 @@ def obra_delete(request, obra_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     tabela = "Obra"
 
@@ -196,7 +209,7 @@ def obra_edit(request, obra_id):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Obra"
@@ -334,7 +347,7 @@ def obra_detail(request, obra_id):
         return obra_list(request)
 
     usuario = "postgres"
-    senha = "#Fantasma10"
+    senha = "admin123"
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
@@ -383,11 +396,6 @@ def obra_detail(request, obra_id):
     sub_consulta += "WHERE id_obra = {0}".format(obra_id)
 
     condicao += " AND sequencia NOT IN ({0})".format(sub_consulta)
-    
-    print("tabela::::",tabela)
-    print("atributos::::",atributos[-1])
-    print("Condicao::::",condicao)
-    print("Join::::",join_[-1])
 
     retorno["exemplares_disponiveis"] =  BD.select(tabela, atributos[-1], where=condicao, join=join_[-1])
 
@@ -412,11 +420,6 @@ def obra_detail(request, obra_id):
     
     sub_consulta = "Select distinct c3.id_genero FROM Obra o3 natural join classificacao c3 where o3.id_obra = obra.id_obra"
     condicao = "id_obra <> {0} AND NOT EXISTS (SELECT o2.titulo FROM Obra o2 natural join Classificacao c2 WHERE o2.id_obra = {0} AND c2.id_genero NOT IN ({1}))".format(obra_id, sub_consulta)
-
-    print("tabela::::",tabela)
-    print("atributos::::",atributos[-1])
-    print("Condicao::::",condicao)
-    print("Join::::",join_[-1])
     
     retorno["generos_similares"] =  BD.select(tabela, atributos[-1], where=condicao, join=join_[-1])
 

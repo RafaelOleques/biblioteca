@@ -3,6 +3,10 @@ from .classes.conexao_BD import ConexaoBD
 from .classes.funcoes_auxiliares import *
 
 #Formulário padrão para adicionar/editar uma obra
+class ObraMostraDado(forms.Form):
+    autor = [("Multigenero", "Multigenero"), ("Mais reservado", "Mais_reservado")]
+    opcoes = forms.ChoiceField(label='Opcoes', widget=forms.Select, choices=autor)
+
 class ObraForm(forms.Form):
     usuario = "postgres"
     senha = "admin123"

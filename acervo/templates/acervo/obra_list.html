@@ -1,6 +1,12 @@
 {% extends 'acervo/base.html' %}
 
 {% block content %}
+
+    <form method="POST" class="">{% csrf_token %}
+        <button type="submit" class="save btn btn-default">Multigenero</button>
+    </form>
+    <br/><br/>
+
     {% for obra in obras %}
         <div class="obra">
             <div class="date">

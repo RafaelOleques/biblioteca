@@ -282,6 +282,7 @@ def subBiblioteca_detail(request, subBiblioteca_id):
     
     join_ = []
     join_.append('')
+
     join_.append("JOIN Exemplar USING(id_subBiblioteca) " + "JOIN Obra USING(id_obra)")
 
     tabelas = ["Sub_Biblioteca","obras"]
@@ -289,6 +290,7 @@ def subBiblioteca_detail(request, subBiblioteca_id):
     i = 0
     for nome_tabela in tabelas:
         retorno[nome_tabela] =  BD.select(tabela, atributos[i], tipo_select=tipo_select, where=condicao, join=join_[i])
+        print(":::::::::::::::", retorno[nome_tabela])
         i += 1
 
     BD.close()
