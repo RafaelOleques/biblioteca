@@ -9,8 +9,12 @@ from . import views_exemplar
 from . import views_usuario
 
 urlpatterns = [
-    path('', views_usuario.usuario_add, name='usuario_add'),
+
+    path('', views_usuario.usuario_login, name='usuario_login'),
     path('login/', views_usuario.usuario_login, name='usuario_login'),
+    path('login/new/', views_usuario.usuario_add, name='usuario_add'),
+
+    path('usuario/', views_usuario.usuario_detail, name='usuario_detail'),
 
     #path('', views_obra.obra_list, name='obra_list'),
     path('acervo/', views_obra.obra_list, name='obra_list'),

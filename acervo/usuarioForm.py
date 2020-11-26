@@ -7,7 +7,7 @@ class UsuarioLoginForm(forms.Form):
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
 
-    usuarios = BD.select("Usuario", ["codigo", "nome"], nome_atributo=False)
+    usuarios = BD.select("Usuario", ["codigo", "email"], nome_atributo=False)
     print(usuarios)
     id_usuario = forms.ChoiceField(label='Usuario', widget=forms.Select, choices=usuarios)
 

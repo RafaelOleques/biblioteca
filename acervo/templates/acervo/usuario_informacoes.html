@@ -1,0 +1,26 @@
+{% extends 'acervo/base.html' %}
+
+{% block content %}
+    <div class="obra">
+        <h2>{{ acao }}</h2> 
+
+        <p><a href="../acervo/">Acervo</a> | <a href="../subBiblioteca/">Bibliotecas</a></p>
+
+        <p><b>Tipo de usuário:<b> {{ tipo_usuario|linebreaksbr }}</p>
+        <p><b>Total de empréstimos corrente:<b> {{ total_livros_corrente|linebreaksbr }}</p>
+        
+        {% if exemplares %}
+            <p><b>Empréstimo corrente: <b>
+                <ul>
+                {% for emprestimo_corrente in emprestimos_corrente %}
+                    <li>Livro: {{ emprestimo_corrente.titulo }}, 
+                        Edicao: {{ emprestimo_corrente.edicao }},
+                        Data do empréstimo: {{ emprestimo_corrente.data_emprestimo }}
+                        Data de devolução esperada: {{ emprestimo_corrente.data_devolucao }}</li>
+                {% endfor %}
+                </ul>
+            </p>
+        {% endif %}
+
+    </div>
+{% endblock %}

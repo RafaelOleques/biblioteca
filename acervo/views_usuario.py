@@ -4,12 +4,9 @@ from .classes.conexao_BD import ConexaoBD
 from .usuarioForm import *
 
 titulo_pagina = "Página do Usuário"
-linkTitulo   = "usuario_login"
+linkTitulo   = "usuario_detail"
 
 def usuario_login(request):
-    usuario = "postgres"
-    senha = "#Fantasma10"
-
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Usuario"
 
@@ -21,8 +18,41 @@ def usuario_login(request):
 
         if form.is_valid():
             request.session['id_usuario'] = form.cleaned_data['id_usuario']
+            
+            #Tipo de usuário
 
-            return HttpResponseRedirect('/acervo/')
+            usuario = "postgres"
+            senha = "#Fantasma10"
+
+            retorno = {} #Variável que armazena informações para serem escritas no HTML
+            tabela = "Usuario"
+
+            BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
+
+            #Administrador?
+            tabela = "Usuario"
+            atributos = ["codigo"]
+            condicao = "codigo = {0}".format(request.session['id_usuario'])
+            join = "JOIN Administrador USING(codigo)"
+
+            Administrador = BD.select(tabela, atributos, where=condicao, join=join)
+
+            #Bibliotecário?
+            tabela = "Usuario"
+            atributos = ["codigo"]
+            condicao = "codigo = {0}".format(request.session['id_usuario'])
+            join = "JOIN Bibliotecario USING(codigo)"
+
+            bibliotecario = BD.select(tabela, atributos, where=condicao, join=join)
+
+            if Administrador != []:
+                request.session['tipo_usuario'] = "Administrador"
+            elif bibliotecario != []:
+                request.session['tipo_usuario'] = "Bibliotecário"
+            else:
+                request.session['tipo_usuario'] = "Usuário comum"
+
+            return HttpResponseRedirect('/usuario/')
     else:
         form = UsuarioLoginForm()
 
@@ -47,7 +77,6 @@ def usuario_add(request):
 
     BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
     usuarios = BD.select("Usuario", ["codigo", "nome"], nome_atributo=False)
-    print(usuarios)
 
     acao = "Novo {0}".format(tabela)
 
@@ -85,10 +114,6 @@ def usuario_add(request):
             print(tabela, atributo_, valores)
             BD.insert(tabela, atributo_, valores)
 
-            todos_usuarios = BD.select(tabela, "*")
-            for usuario in todos_usuarios:
-                print("USUARIO:::::", usuario)
-
             atributos_aux = []
             valores = []
 
@@ -96,7 +121,7 @@ def usuario_add(request):
             
 
             #Volta para a página dos livros
-            return HttpResponseRedirect('/acervo/')
+            return HttpResponseRedirect('/login/')
 
     #Se for um GET ou outro método, então cria um formulário em branco
     else:
@@ -109,3 +134,69 @@ def usuario_add(request):
     retorno["add"] = "add_" + "Obra"
 
     return render(request, 'acervo/add.html', retorno)
+    
+def usuario_detail(request):
+    if 'id_usuario' not in request.session:
+        return HttpResponseRedirect('/login/')
+
+    usuario = "postgres"
+    senha = "#Fantasma10"
+
+    retorno = {} #Variável que armazena informações para serem escritas no HTML
+    tabela = "Usuario"
+
+    BD = ConexaoBD("localhost", "SistemaBiblioteca", usuario, senha)
+
+    #Mensagem da página do usuário
+    atributos = "nome"
+    condicao = "codigo = {0}".format(request.session['id_usuario'])
+    print(tabela, atributos, condicao)
+    nome_usuario = BD.select(tabela, atributos, where=condicao)
+
+    acao = "Bem-vindo, {0}!".format(nome_usuario[0]["nome"])
+
+    #Tipo de usuário
+
+    tipo_usuario = request.session['tipo_usuario']
+
+    #Empréstimos corrente
+    tabela = "Emprestimo_Corrente"
+    atributos = ["titulo", "edicao", "data_emprestimo", "data_devolucao"]
+    condicao = "codigo_usuario = {0}".format(request.session['id_usuario'])
+
+    join  = "JOIN Usuario ON Emprestimo_Corrente.codigo_usuario = Usuario.codigo "
+    join += "JOIN Obra USING(id_obra) "
+    join += "JOIN Exemplar USING(sequencia)"
+
+    informacoes = BD.select(tabela, atributos, where=condicao, join=join)
+    emprestimos_corrente = informacoes
+
+    #Histórico de empréstimos
+    
+
+    #Total de livros com o usuário
+    tabela = "Emprestimo_Corrente"
+    atributos = "count(id_obra) as nro_emprestimos"
+    condicao = "codigo_usuario = {0}".format(request.session['id_usuario'])
+    group_by = "codigo_usuario"
+
+    informacoes = BD.select(tabela, atributos, where=condicao, group_by=group_by)
+
+    if informacoes == []:
+        total_livros_corrente = 0
+    else:
+        total_livros_corrente = informacoes[0]
+    print(":::::::::::::",informacoes)
+
+
+    BD.close()
+    
+    retorno['titulo'] = titulo_pagina
+    retorno['acao'] = acao
+    retorno["linkTitulo"] = linkTitulo
+    retorno["add"] = "add_" + "Obra"
+    retorno["total_livros_corrente"] = total_livros_corrente
+    retorno["emprestimos_corrente"] = emprestimos_corrente
+    retorno["tipo_usuario"] = tipo_usuario
+
+    return render(request, 'acervo/usuario_informacoes.html', retorno)
