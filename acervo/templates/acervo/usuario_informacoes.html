@@ -17,7 +17,7 @@
                 {% for emprestimo_corrente in emprestimos_corrente %}
                     <li><a href="{% url 'obra_detail' emprestimo_corrente.id %}">{{ emprestimo_corrente.titulo }}</a>
                         <ul>
-                            <li<a href="{% url 'exemplar_devolucao' emprestimo_corrente.id emprestimo_corrente.sequencia%}">Devolver</a></li>
+                            <li><a href="{% url 'exemplar_devolucao' emprestimo_corrente.id emprestimo_corrente.sequencia%}">Devolver</a></li>
                             <li>Edicao: {{ emprestimo_corrente.edicao }}</li>
                             <li> Data do empréstimo: {{ emprestimo_corrente.data_emprestimo }}</li>
                             <li>Data de devolução esperada: {{ emprestimo_corrente.data_devolucao }}</li>

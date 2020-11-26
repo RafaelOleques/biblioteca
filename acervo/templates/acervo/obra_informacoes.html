@@ -9,10 +9,12 @@
                 {% endfor %}
             </div>
             <h2>{{ obra.titulo }}</h2> 
-
-           <p><a href="{% url 'obra_edit' obra.id %}">Editar</a> 
-            | <a href="{% url 'obra_delete' obra.id %}">Excluir</a></p>
-            <p><a href="{% url 'exemplar_add' obra.id %}">Adicionar exemplar</a></p>   
+            
+            {% if request.session.tipo_usuario == "Administrador" or request.session.tipo_usuario == "Bibliotecário" %}
+                <p><a href="{% url 'obra_edit' obra.id %}">Editar</a> 
+                | <a href="{% url 'obra_delete' obra.id %}">Excluir</a></p>
+                <p><a href="{% url 'exemplar_add' obra.id %}">Adicionar exemplar</a></p>
+            {% endif %}   
 
             <p><b>ISBN:<b> {{ obra.isbn|linebreaksbr }}</p>
             <p><b>Data de publicação:<b> {{ obra.ano_publicacao|linebreaksbr }}</p>

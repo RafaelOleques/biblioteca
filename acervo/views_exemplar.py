@@ -57,10 +57,13 @@ def exemplar_devolucao(request, obra_id, sequencia):
     emprestimo_corrente = BD.select(tabela, atributos, where=condicao)
     emprestimo_corrente = emprestimo_corrente[0]
 
+    print("Emprestimo corrente:::::::::", emprestimo_corrente)
+
     data_atual = date.today()
     data_devolucao_efetiva = data_atual.strftime('%d/%m/%Y')
 
     #Deleta o empréstimo corrente
+    print("Delete:::::::::::::", tabela, condicao)
     BD.delete(tabela, condicao)
 
     #Pega as informações para a

@@ -26,7 +26,7 @@ urlpatterns = [
 
     path('acervo/obra/<str:obra_id>/exemplar/add/', views_exemplar.exemplar_add, name='exemplar_add'),
     path('acervo/obra/<str:obra_id>/exemplar/<str:sequencia>/reserva/', views_exemplar.exemplar_reserva, name='exemplar_reserva'),
-    path('acervo/obra/<str:obra_id>/exemplar/<str:sequencia>/devolve/', views_exemplar.exemplar_devolucao, name='exemplar_devolucao'),
+    path('acervo/obra/<str:obra_id>/exemplar/<str:sequencia>/devolvucao/', views_exemplar.exemplar_devolucao, name='exemplar_devolucao'),
 
     path('editora/', views_editora.editora_list, name='editora_list'),
     path('editora/add/', views_editora.editora_add, name='add_Editora'),
