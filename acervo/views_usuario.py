@@ -22,7 +22,7 @@ def usuario_login(request):
             #Tipo de usuário
 
             usuario = "postgres"
-            senha = "admin123"
+            senha = "#Fantasma10"
 
             retorno = {} #Variável que armazena informações para serem escritas no HTML
             tabela = "Usuario"
@@ -70,7 +70,7 @@ def usuario_login(request):
 
 def usuario_add(request):
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Usuario"
@@ -140,7 +140,7 @@ def usuario_detail(request):
         return HttpResponseRedirect('/login/')
 
     usuario = "postgres"
-    senha = "admin123"
+    senha = "#Fantasma10"
 
     retorno = {} #Variável que armazena informações para serem escritas no HTML
     tabela = "Usuario"
@@ -196,6 +196,17 @@ def usuario_detail(request):
     livros_genero = BD.select(tabela, atributos, join=join, where=condicao, group_by=group_by)
 
 
+    #Biblioteca mais frequentada
+    tabela = "BibliotecasFrequentadas"
+    atributos = ['nome']
+    join  = ''
+    condicao = 'codigo_usuario = {0}'.format(request.session['id_usuario'])
+    condicao += ' AND nrosub = (Select max(nrosub) FROM BibliotecasFrequentadas WHERE codigo_usuario = {0})'.format(request.session['id_usuario'])
+
+    print("******************************************************")
+    bibliotecas_frequentadas = BD.select(tabela, atributos, join=join, where=condicao)
+
+
     BD.close()
     
     retorno['titulo'] = titulo_pagina
@@ -206,5 +217,6 @@ def usuario_detail(request):
     retorno["emprestimos_corrente"] = emprestimos_corrente
     retorno["tipo_usuario"] = tipo_usuario
     retorno["livros_genero"] = livros_genero
+    retorno["bibliotecas_frequentadas"] = bibliotecas_frequentadas
 
     return render(request, 'acervo/usuario_informacoes.html', retorno)

@@ -13,6 +13,11 @@
             <p><b>Total de livros já lidos de {{ livro_genero.nome }}:<b> {{ livro_genero.quantidade|linebreaksbr }}</p>
         {% endfor %}
 
+        {% for biblioteca in bibliotecas_frequentadas %}
+            <p><b>Sua biblioteca mais frequentada é: {{ biblioteca.nome }}<b></p>
+            <p><b>Conheça também nossas outras Bibliotecas!<b></p>
+        {% endfor %}
+
         {% if emprestimos_corrente %}
             <hr/>
             <p><b>Empréstimo corrente: <b>
